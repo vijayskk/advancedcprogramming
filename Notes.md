@@ -50,3 +50,71 @@ int main(int argc, char const *argv[])
 ```
 *Here all the functions inside the file can access the variable*
 
+### External variables
+External variables are variables which are declared in a file and can be accessed across any file in the project.
+
+This is the *fun.c* file 
+```c
+#include "functions.h"
+#include <stdio.h>
+
+extern int myextern;  // The external variable is defined here
+
+void getmyextern(){
+    printf("%d\n",myextern);
+}
+```
+
+The *main.c* file is: 
+```c
+#include <stdio.h>
+#include "functions.h"
+
+int myextern = 10; // This is the initialisation
+
+int main(int argc, char const *argv[])
+{
+    printf("%d\n",myextern); // Output: 10
+    getmyextern(); // Output: 10
+    return 0;
+}
+```
+
+## Header file uses
+* A program can be divided into individual files and that can be maintained easyly.
+
+* Macros , functions , enums and structers are all can be defined in a header file 
+eg:
+```c
+extern int hello;
+int myfunc(int a);
+void getmyextern();
+```
+
+## Memory types
+### Stack memory
+* Memory that is used inside a function. 
+* Locally available so easy to track.
+* Uses LIFO (last in first out) method to save variables.
+* Allocated and freed automatically.
+### Heap memory
+- Have a hierarchial structure.
+- A larg pool which is used dynamicaly
+- Managed by programer (not automatic)
+- Accessed using pointers
+- Created using ```malloc()```
+- Deleted using ```free()```
+- Restriction is only the physical size of memory.
+- Global 
+- Slower
+### How to selct
+
+|  Stack | Heap  |
+|---|---|
+|  For small memory |  When need larger memory |
+| When only need to persist when the function is alive | When to keep the data for a long time |
+| Easier and faster | When to allocate data dynamically (arrays,struct) |
+
+
+
+
