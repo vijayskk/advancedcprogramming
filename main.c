@@ -2,15 +2,15 @@
 #include "functions.h"
 
 
-int i = 10;
-void updatei(int a);
+extern void countNow(void);
+extern void sayCount(void);
 
 int main(int argc, char const *argv[])
 {
-    printf("%d\n",i);
-    updatei(100);
-    printf("%d\n",i);
-    return 0;
+    sayCount();
+    countNow();
+    countNow();
+    sayCount();
 }
 
 

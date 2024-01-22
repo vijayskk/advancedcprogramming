@@ -171,7 +171,40 @@ int main(int argc, char const *argv[])
 
 ```
 
+When using arrays we dont have to give the dimention of the size while defining an extern variable.
 
+fun.c file:
+```c
+#include <stdio.h>
+
+extern char password[];
+void printpass(void){
+    printf("%s\n",password);
+}
+```
+main.c file:
+```c
+#include <stdio.h>
+#include "functions.h"
+
+char password[30] = "12345";
+void printpass(void);
+
+int main(int argc, char const *argv[])
+{
+    printf("%s\n",password);
+    printpass();
+    return 0;
+}
+```
+
+for multi-dimentional arrays we have to specify the second size of the array.
+```c
+extern int data[][10];
+```
+This denotes a multi dimentional array with 10 fixed columns and as many rows as we initialize.
+
+We can make functions also  
 
 
 
