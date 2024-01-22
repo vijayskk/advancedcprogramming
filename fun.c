@@ -1,8 +1,5 @@
-#include "functions.h"
-#include <stdio.h>
+extern int i;
 
-extern int myextern;
-
-void getmyextern(){
-    printf("%d\n",myextern);
+void updatei(int a){
+    i = a;
 }

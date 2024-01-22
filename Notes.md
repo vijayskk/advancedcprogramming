@@ -1,4 +1,4 @@
-# Notes are pasted here
+# Section 4
 All notes for the tutorial will be here
 
 ## Makefiles
@@ -114,6 +114,63 @@ void getmyextern();
 |  For small memory |  When need larger memory |
 | When only need to persist when the function is alive | When to keep the data for a long time |
 | Easier and faster | When to allocate data dynamically (arrays,struct) |
+
+# Section 5
+## Storage classes
+classified with respect to it's scope,visiblity and lifetime.
+### Auto variable 
+- The lifetime is defined automatically. 
+- A variable in a function or loop is defaultly automatic.
+- Because the default ```auto``` keyword is not used that much.
+
+eg:
+```c
+#include <stdio.h>
+
+int main(){
+    for (int i = 0;i<=10;i++){
+        auto int age = 18;
+        printf("%d",age);
+    }
+    // age is destroyed when exited the loop 
+}
+```
+### Extern variable
+- The lifetime is as the program exits.
+- Can initialize an external variable with a legal value where it declared.
+- Can be accessed within files.
+- every fle must reinitialize them to use. But the value will be same everywhere.
+
+fun.c file:
+```c
+#include "functions.h"
+#include <stdio.h>
+
+extern int myextern;  // The extern varable is defined
+
+void getmyextern(){
+    printf("%d\n",myextern); // can be accessed in the same file
+}
+```
+
+main.c file:
+```c
+#include <stdio.h>
+#include "functions.h"
+
+
+int myextern = 10;  // The variable is initialized.
+
+
+int main(int argc, char const *argv[])
+{
+    printf("%d\n",myextern); // can be used in the same file
+    getmyextern();
+    return 0;
+}
+
+```
+
 
 
 
