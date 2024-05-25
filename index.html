@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Notes.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="section-4">Section 4</h1>
+<p>All notes for the tutorial will be here</p>
+<h2 id="makefiles">Makefiles</h2>
+<p>Makefiles are tools used for automating the building task.
+They have variables called <strong>Macros</strong></p>
+<p>A macro can be initialized as</p>
+<pre class="hljs"><code><div>CC = gcc
+</div></code></pre>
+<p>conventionaly CC is the program to be executed. We can define any value as a macro</p>
+<pre class="hljs"><code><div>CC = gcc
+CFLAGS = <span class="hljs-string">" -v "</span>
+</div></code></pre>
+<p>Then we have something called a process. A process can be defined with the files that are being affected.</p>
+<pre class="hljs"><code><div><span class="hljs-section">main: main.c function.c</span>
+    <span class="hljs-variable">$(CC)</span> <span class="hljs-variable">$?</span> <span class="hljs-variable">$(CFLAGS)</span> -o <span class="hljs-variable">$@</span>.o
+</div></code></pre>
+<p>Tha make program will just fill in the macros and execute any command. The Macros will be distributed as:</p>
+<ul>
+<li><code>$(CC)</code> and <code>$(CFLAGS)</code> will split out the values of the variables</li>
+<li><code>$?</code> will give the changed filenames.</li>
+<li><code>$@</code> will give the current process name in this case <em>main</em></li>
+</ul>
+<h2 id="variable-scopes">Variable Scopes</h2>
+<h3 id="global-variables">Global variables</h3>
+<p>Global variables are defined in the top of a file and outside of any function</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+
+<span class="hljs-keyword">int</span> multip = <span class="hljs-number">10</span>; <span class="hljs-comment">// This is a global variable </span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printmult</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"The Multiplier is %d\n"</span>,multip);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>,multip);
+    printmult();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p><em>Here all the functions inside the file can access the variable</em></p>
+<h3 id="external-variables">External variables</h3>
+<p>External variables are variables which are declared in a file and can be accessed across any file in the project.</p>
+<p>This is the <em>fun.c</em> file</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"functions.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-keyword">extern</span> <span class="hljs-keyword">int</span> myextern;  <span class="hljs-comment">// The external variable is defined here</span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">getmyextern</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>,myextern);
+}
+</div></code></pre>
+<p>The <em>main.c</em> file is:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"functions.h"</span></span>
+
+<span class="hljs-keyword">int</span> myextern = <span class="hljs-number">10</span>; <span class="hljs-comment">// This is the initialisation</span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>,myextern); <span class="hljs-comment">// Output: 10</span>
+    getmyextern(); <span class="hljs-comment">// Output: 10</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h2 id="header-file-uses">Header file uses</h2>
+<ul>
+<li>
+<p>A program can be divided into individual files and that can be maintained easyly.</p>
+</li>
+<li>
+<p>Macros , functions , enums and structers are all can be defined in a header file
+eg:</p>
+</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">extern</span> <span class="hljs-keyword">int</span> hello;
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">myfunc</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">getmyextern</span><span class="hljs-params">()</span></span>;
+</div></code></pre>
+<h2 id="memory-types">Memory types</h2>
+<h3 id="stack-memory">Stack memory</h3>
+<ul>
+<li>Memory that is used inside a function.</li>
+<li>Locally available so easy to track.</li>
+<li>Uses LIFO (last in first out) method to save variables.</li>
+<li>Allocated and freed automatically.</li>
+</ul>
+<h3 id="heap-memory">Heap memory</h3>
+<ul>
+<li>Have a hierarchial structure.</li>
+<li>A larg pool which is used dynamicaly</li>
+<li>Managed by programer (not automatic)</li>
+<li>Accessed using pointers</li>
+<li>Created using <code>malloc()</code></li>
+<li>Deleted using <code>free()</code></li>
+<li>Restriction is only the physical size of memory.</li>
+<li>Global</li>
+<li>Slower</li>
+</ul>
+<h3 id="how-to-selct">How to selct</h3>
+<table>
+<thead>
+<tr>
+<th>Stack</th>
+<th>Heap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>For small memory</td>
+<td>When need larger memory</td>
+</tr>
+<tr>
+<td>When only need to persist when the function is alive</td>
+<td>When to keep the data for a long time</td>
+</tr>
+<tr>
+<td>Easier and faster</td>
+<td>When to allocate data dynamically (arrays,struct)</td>
+</tr>
+</tbody>
+</table>
+<h1 id="section-5">Section 5</h1>
+<h2 id="storage-classes">Storage classes</h2>
+<p>classified with respect to it's scope,visiblity and lifetime.</p>
+<h3 id="auto-variable">Auto variable</h3>
+<ul>
+<li>The lifetime is defined automatically.</li>
+<li>A variable in a function or loop is defaultly automatic.</li>
+<li>Because the default <code>auto</code> keyword is not used that much.</li>
+</ul>
+<p>eg:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;i&lt;=<span class="hljs-number">10</span>;i++){
+        <span class="hljs-keyword">auto</span> <span class="hljs-keyword">int</span> age = <span class="hljs-number">18</span>;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d"</span>,age);
+    }
+    <span class="hljs-comment">// age is destroyed when exited the loop </span>
+}
+</div></code></pre>
+<h3 id="extern-variable">Extern variable</h3>
+<ul>
+<li>The lifetime is as the program exits.</li>
+<li>Can initialize an external variable with a legal value where it declared.</li>
+<li>Can be accessed within files.</li>
+<li>every fle must reinitialize them to use. But the value will be same everywhere.</li>
+</ul>
+<p>fun.c file:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"functions.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-keyword">extern</span> <span class="hljs-keyword">int</span> myextern;  <span class="hljs-comment">// The extern varable is defined</span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">getmyextern</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>,myextern); <span class="hljs-comment">// can be accessed in the same file</span>
+}
+</div></code></pre>
+<p>main.c file:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"functions.h"</span></span>
+
+
+<span class="hljs-keyword">int</span> myextern = <span class="hljs-number">10</span>;  <span class="hljs-comment">// The variable is initialized.</span>
+
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>,myextern); <span class="hljs-comment">// can be used in the same file</span>
+    getmyextern();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+</div></code></pre>
+<p>When using arrays we dont have to give the dimention of the size while defining an extern variable.</p>
+<p>fun.c file:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-keyword">extern</span> <span class="hljs-keyword">char</span> password[];
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printpass</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s\n"</span>,password);
+}
+</div></code></pre>
+<p>main.c file:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"functions.h"</span></span>
+
+<span class="hljs-keyword">char</span> password[<span class="hljs-number">30</span>] = <span class="hljs-string">"12345"</span>;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printpass</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s\n"</span>,password);
+    printpass();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>for multi-dimentional arrays we have to specify the second size of the array.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">extern</span> <span class="hljs-keyword">int</span> data[][<span class="hljs-number">10</span>];
+</div></code></pre>
+<p>This denotes a multi dimentional array with 10 fixed columns and as many rows as we initialize.</p>
+<p>We can make functions also</p>
+<h1 id="section-6">Section 6</h1>
+<h2 id="advanced-datatypes">Advanced Datatypes</h2>
+<h3 id="variable-length-arrays">Variable length arrays</h3>
+<p>A variable length array have the length of an expression executed at the runtime.
+It doesn't mean you can modify that after we create.
+Just means that we can give a variable at the position of the size f the array.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-keyword">int</span> <span class="hljs-built_in">size</span>;
+    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>,&amp;<span class="hljs-built_in">size</span>);
+    <span class="hljs-keyword">int</span> arr[<span class="hljs-built_in">size</span>];
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"array of %d elements created."</span>,<span class="hljs-built_in">size</span>);
+}
+</div></code></pre>
+<h3 id="flexible-array-members">Flexible array members</h3>
+<p>Flexible array membes is a technique where we can specify the length of the array in runtime and also we can modify it. Here is an example code.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flexarr</span>
+{</span>
+    <span class="hljs-keyword">int</span> arraysize;
+    <span class="hljs-keyword">int</span> <span class="hljs-built_in">array</span>[];
+};
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">int</span> desiredSize = <span class="hljs-number">5</span>;
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flexarr</span> * <span class="hljs-title">ptr</span>;</span>
+    ptr = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(struct flexarr) + desiredSize + <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="complex-numbers">Complex Numbers</h3>
+<p>A number in the form of <em>a+ib</em></p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;complex.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">double</span> <span class="hljs-built_in">complex</span> var = <span class="hljs-number">12</span>+<span class="hljs-number">10</span>*I;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Real part : %f\nImaginary part : %f"</span>,creal(var),cimag(var));
+    
+    <span class="hljs-keyword">double</span> <span class="hljs-built_in">complex</span> sum = var + var;
+    
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\nSum is : %f+%fi"</span>,creal(sum),cimag(sum));
+    
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+</div></code></pre>
+<h3 id="designated-initialization">Designated Initialization</h3>
+<p>Designated initializers are used to initialize only some certain members of the array. For example:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">int</span> arr[<span class="hljs-number">6</span>] = {[<span class="hljs-number">0</span>]=<span class="hljs-number">100</span>,[<span class="hljs-number">4</span>]=<span class="hljs-number">20</span>};
+<span class="hljs-comment">// Output: 100 0 0 0 20 0 </span>
+</div></code></pre>
+<p>This initializes only 0th position and 4th position. All other elements are set to be zero.</p>
+<p>Also we can specify a range of numbers to initialize.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">int</span> arr2[<span class="hljs-number">22</span>] = {[<span class="hljs-number">0</span> ... <span class="hljs-number">9</span>] = <span class="hljs-number">1</span>,[<span class="hljs-number">10</span> ... <span class="hljs-number">20</span>] = <span class="hljs-number">11</span>,[<span class="hljs-number">21</span>]=<span class="hljs-number">111</span>};
+<span class="hljs-comment">// Output: 1 1 1 1 1 1 1 1 1 1 11 11 11 11 11 11 11 11 11 11 11 111</span>
+</div></code></pre>
+<p>Similiar will work in struct also.</p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">person</span>{</span>
+    <span class="hljs-keyword">char</span> * name;
+    <span class="hljs-keyword">int</span> age;
+};
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">person</span> <span class="hljs-title">p1</span> = {</span>.name = <span class="hljs-string">"Vijay"</span> , .age = <span class="hljs-number">20</span>};
+}
+</div></code></pre>
+<h3 id="what-you-know">What you know</h3>
+<p>What is the output of the following program?#define NUMBER 55 #define NUMBER2 20 int main() { int i = NUMBER &gt; NUMBER2; printf(&quot;%d&quot;, i); }</p>
+<p>What will be the output of the following program?#include&lt;stdio.h&gt; #define x 4 int main() { int y; y= x<em>x</em>x; printf(&quot;%d&quot;,y); return 0; }</p>
+<p>Write a preprocessor directive to accomplish each of the following:Define symbolic constant YES to have the value 1</p>
+<p>The keyword typedef is used to define a new data type (T/F)</p>
+<p>What will be the output of the following program?typedef int integer; int main() { int i = 22, *ptr; float f = 33; integer j = i; ptr = &amp;j; printf(&quot;%d\n&quot;, *ptr); return 0; }</p>
+<p>We want to declare x, y and z as pointers of type int. The alias name given is: int_ptrThe correct way to do this using the keyword typedef is:</p>
+<p>One of the major differences between typedef and #define is that a typedef interpretation is performed by the _________________ where as a #define interpretation is performed by the _____________.</p>
+<p>Declare an array of 100 ints and initialize it so that the last element is -1</p>
+<p>An array whose length is defined in terms of a value determined at execution time is a __________.</p>
+<p>A variable-length array can change in size during its lifetime. (T/F)</p>
+<p>If you include the &lt;complex.h&gt; header, you can use the complex type (T/F)</p>
+<h3 id="what-you-should-review">What you should review</h3>
+<p>What will be the output of the following program?#include&lt;stdio.h&gt; #define int char int main() { int x=8; printf (&quot;sizeof (x) =%d&quot;, sizeof (x)); }</p>
+<p>__________ allow us to initialize elements of an array explicitly by using a subscript.</p>
+<p>Declare an array of 100 ints and initialize it so that elements 5, 10, 11, 12, and 3 are 101
+Continue</p>
+
+</body>
+</html>
