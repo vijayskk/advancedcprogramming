@@ -208,3 +208,40 @@ We can make functions also
 
 
 
+# Section 6
+## Advanced Datatypes
+### Variable length arrays
+A variable length array have the length of an expression executed at the runtime.
+It doesn't mean you can modify that after we create.
+Just means that we can give a variable at the position of the size f the array.
+```c
+#include <stdio.h>
+
+int main(){
+    int size;
+    scanf("%d",&size);
+    int arr[size];
+    printf("array of %d elements created.",size);
+}
+```
+### Flexible array members
+Flexible array membes is a technique where we can specify the length of the array in runtime and also we can modify it. Here is an example code.
+```c
+#include <stdio.h>
+#include <stdlib.h>
+struct flexarr
+{
+    int arraysize;
+    int array[];
+};
+
+int main(int argc, char const *argv[])
+{
+    int desiredSize = 5;
+    struct flexarr * ptr;
+    ptr = malloc(sizeof(struct flexarr) + desiredSize + sizeof(int));
+    return 0;
+}
+```
+### Complex Numbers
+A number in the form of *a+ib*
