@@ -245,3 +245,79 @@ int main(int argc, char const *argv[])
 ```
 ### Complex Numbers
 A number in the form of *a+ib*
+```c
+#include <stdio.h>
+#include <complex.h>
+
+int main(int argc, char const *argv[])
+{
+    double complex var = 12+10*I;
+    printf("Real part : %f\nImaginary part : %f",creal(var),cimag(var));
+    
+    double complex sum = var + var;
+    
+    printf("\nSum is : %f+%fi",creal(sum),cimag(sum));
+    
+    return 0;
+}
+
+```
+### Designated Initialization
+Designated initializers are used to initialize only some certain members of the array. For example:
+```c
+int arr[6] = {[0]=100,[4]=20};
+// Output: 100 0 0 0 20 0 
+```
+This initializes only 0th position and 4th position. All other elements are set to be zero.
+
+Also we can specify a range of numbers to initialize.
+```c
+int arr2[22] = {[0 ... 9] = 1,[10 ... 20] = 11,[21]=111};
+// Output: 1 1 1 1 1 1 1 1 1 1 11 11 11 11 11 11 11 11 11 11 11 111
+```
+
+Similiar will work in struct also.
+```c
+struct person{
+    char * name;
+    int age;
+};
+
+int main(){
+    struct person p1 = {.name = "Vijay" , .age = 20};
+}
+```
+### What you know
+
+What is the output of the following program?#define NUMBER 55 #define NUMBER2 20 int main() { int i = NUMBER > NUMBER2; printf("%d", i); }
+
+What will be the output of the following program?#include<stdio.h> #define x 4 int main() { int y; y= x*x*x; printf("%d",y); return 0; }
+
+Write a preprocessor directive to accomplish each of the following:Define symbolic constant YES to have the value 1
+
+The keyword typedef is used to define a new data type (T/F)
+
+What will be the output of the following program?typedef int integer; int main() { int i = 22, *ptr; float f = 33; integer j = i; ptr = &j; printf("%d\n", *ptr); return 0; }
+
+We want to declare x, y and z as pointers of type int. The alias name given is: int_ptrThe correct way to do this using the keyword typedef is:
+
+One of the major differences between typedef and #define is that a typedef interpretation is performed by the _________________ where as a #define interpretation is performed by the _____________.
+
+Declare an array of 100 ints and initialize it so that the last element is -1
+
+An array whose length is defined in terms of a value determined at execution time is a __________.
+
+A variable-length array can change in size during its lifetime. (T/F)
+
+If you include the <complex.h> header, you can use the complex type (T/F)
+### What you should review
+
+What will be the output of the following program?#include<stdio.h> #define int char int main() { int x=8; printf ("sizeof (x) =%d", sizeof (x)); }
+
+__________ allow us to initialize elements of an array explicitly by using a subscript.
+
+Declare an array of 100 ints and initialize it so that elements 5, 10, 11, 12, and 3 are 101
+Continue
+
+
+
