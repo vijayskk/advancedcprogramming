@@ -658,6 +658,25 @@ Just means that we can give a variable at the position of the size f the array.<
 <p>__________ allow us to initialize elements of an array explicitly by using a subscript.</p>
 <p>Declare an array of 100 ints and initialize it so that elements 5, 10, 11, 12, and 3 are 101
 Continue</p>
+<h1 id="section-7">Section 7</h1>
+<h2 id="type-qualifiers">Type qualifiers</h2>
+<p>Type qualifiers can be used to give more information about the variable to the compiler.
+Examples are const,volatile,restrict</p>
+<h3 id="const">Const</h3>
+<p>const keyword represents a constant variable once it is initialized with a value it cannot be changed.
+Trying to do so will produce an error.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> pi = <span class="hljs-number">3.14</span>;
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> nums[<span class="hljs-number">2</span>] = {<span class="hljs-number">1</span>,<span class="hljs-number">2</span>};
+    <span class="hljs-keyword">typedef</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> myvarname;
+    <span class="hljs-keyword">const</span> myvarname var = <span class="hljs-number">10</span>;
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> * ptr;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
 
 </body>
 </html>

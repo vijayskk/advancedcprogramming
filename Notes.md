@@ -319,5 +319,24 @@ __________ allow us to initialize elements of an array explicitly by using a sub
 Declare an array of 100 ints and initialize it so that elements 5, 10, 11, 12, and 3 are 101
 Continue
 
+# Section 7
+## Type qualifiers
+Type qualifiers can be used to give more information about the variable to the compiler.
+Examples are const,volatile,restrict
+### Const
+const keyword represents a constant variable once it is initialized with a value it cannot be changed.
+Trying to do so will produce an error.
+```c
+#include <stdio.h>
 
+int main(int argc, char const *argv[])
+{
+    const double pi = 3.14;
+    const int nums[2] = {1,2};
+    typedef const int myvarname;
+    const myvarname var = 10;
+    const int * ptr;
+    return 0;
+}
+```
 
