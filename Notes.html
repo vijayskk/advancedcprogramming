@@ -677,6 +677,69 @@ Trying to do so will produce an error.</p>
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </div></code></pre>
+<h3 id="volatile">Volatile</h3>
+<p>volatile keyword represents that this variable will be changed during runtime so the compiler will supress various optimizations against reduntant assignments.
+Also prevents caching of variables.</p>
+<p>Chosable when:</p>
+<ul>
+<li>Programs that have a lot of threading</li>
+<li>Programs where resources are scarce</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">double</span> loc1;
+    <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">double</span> *ptr1;
+    <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">int</span> clock;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="restrict">Restrict</h3>
+<p>Used as an optimization hint for type qualifiers. In case of pointers, restrict tells to compiler that this pointer is not going to be changed throughout it's lifetime and it is the sole object to save the data. This cancels all the other checks. Also there will be only that pointer which access a specific data. Anyway the compiler can chose to ignore it.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">int</span> * <span class="hljs-keyword">restrict</span> ptr2; 
+    <span class="hljs-keyword">int</span> * <span class="hljs-keyword">restrict</span> ptr3;
+    <span class="hljs-comment">// Cannot have same address</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="what-you-know">What you know</h3>
+<ul>
+<li>
+<p>What will be the output of the following program? #include &lt;stdio.h&gt; void main() { int k = 4; int *const p = &amp;k; int r = 3; p = &amp;r; printf(&quot;%d&quot;, p); }</p>
+</li>
+<li>
+<p>What will be the output of the following program? #include &lt;stdio.h&gt; void main() { int const k = 5; k++; printf(&quot;k is %d&quot;, k); }</p>
+</li>
+<li>
+<p>One of the main use cases for using the volatile type qualifier is to ensure that global variables accessed by multiple tasks within a multi-threaded application are not optimized by the compiler</p>
+</li>
+<li>
+<p>Can a pointer be volatile? Explain your answer.</p>
+</li>
+<li>
+<p>The restrict type qualifier can be applied to all data types (T/F)</p>
+</li>
+<li>
+<p>The restrict type qualifier is not supported by C++  (T/F)</p>
+</li>
+</ul>
+<h3 id="what-you-should-review">What you should review</h3>
+<ul>
+<li>
+<p>Which of the following statements is false?</p>
+</li>
+<li>
+<p>Can a parameter be both const and volatile? Explain your answer.</p>
+</li>
+<li>
+<p>The restrict type qualifier is an optimization hint for the compiler that is must follow (T/F)</p>
+</li>
+</ul>
 
 </body>
 </html>

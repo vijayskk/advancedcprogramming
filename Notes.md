@@ -339,4 +339,56 @@ int main(int argc, char const *argv[])
     return 0;
 }
 ```
+### Volatile
+volatile keyword represents that this variable will be changed during runtime so the compiler will supress various optimizations against reduntant assignments.
+Also prevents caching of variables.
+
+Chosable when:
+- Programs that have a lot of threading 
+- Programs where resources are scarce
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    volatile double loc1;
+    volatile double *ptr1;
+    volatile int clock;
+    return 0;
+}
+```
+### Restrict
+Used as an optimization hint for type qualifiers. In case of pointers, restrict tells to compiler that this pointer is not going to be changed throughout it's lifetime and it is the sole object to save the data. This cancels all the other checks. Also there will be only that pointer which access a specific data. Anyway the compiler can chose to ignore it.
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    int * restrict ptr2; 
+    int * restrict ptr3;
+    // Cannot have same address
+    return 0;
+}
+```
+### What you know
+
+- What will be the output of the following program? #include <stdio.h> void main() { int k = 4; int *const p = &k; int r = 3; p = &r; printf("%d", p); }
+
+- What will be the output of the following program? #include <stdio.h> void main() { int const k = 5; k++; printf("k is %d", k); }
+
+- One of the main use cases for using the volatile type qualifier is to ensure that global variables accessed by multiple tasks within a multi-threaded application are not optimized by the compiler
+
+- Can a pointer be volatile? Explain your answer.
+
+- The restrict type qualifier can be applied to all data types (T/F)
+
+- The restrict type qualifier is not supported by C++  (T/F)
+### What you should review
+
+- Which of the following statements is false?
+
+- Can a parameter be both const and volatile? Explain your answer.
+
+- The restrict type qualifier is an optimization hint for the compiler that is must follow (T/F)
+
 
