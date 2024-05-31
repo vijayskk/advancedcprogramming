@@ -391,4 +391,299 @@ int main(int argc, char const *argv[])
 
 - The restrict type qualifier is an optimization hint for the compiler that is must follow (T/F)
 
+# Section 8
+## Bit Manipulation 
+### Binary numbers or bits
+bits for the basic datatypes in c are 
+
+| type    | bits   | values |
+| -------- | ------- | -------|
+| bool | 1 | 0 to 1|
+| char | 8 | -128 to 127 | 
+| short int | 16 | -32768 to 32767 |
+| long int | 32 | -2,147,483,648 to 2,147,483,647 | 
+### Negative numbers
+Negative numbers are represented in the computer using two's complement method. The leftmost bit indicates the sign. If it is 1 then it is a -ve number. 
+To convert to two's complement, add 1 and complement the result
+
+- -5  >>>  -4  >>> 00000100 >>> 11111011
+
+To convert back: 
+Complement all the bits, convert it to decimal,give -ve sign and subtract 1.
+
+
+- 11111011 >>> 00000100 >>> 4 >>> -4 >>> -4-1 = -5
+
+### Bitwise Operators
+Bit manipulation is the act of manipulating data algorithamically that is shorter than a word (2 Bytes).
+
+Use cases of bit manipulation are: 
+- Low-level device control
+- Error detection
+- Correction algorithms
+- Data compression
+- Encryption
+- Optimization 
+Bit manipulation is far faster than any basic operation.
+
+C offers logical as well as Shifting operators.
+| Symbol | Operation |
+|---|---|
+| & | AND |
+| \| | OR |
+| ^ | XOR | 
+| ~ | Ones cpl | 
+
+*They are not regular logical operators ( && , || ).Don't be confused*
+
+- They operate on each bit indepentend of the order ( to left or to right )
+
+- All except ```~``` takes two operators so they are called binary operators.
+
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+
+    long int a = 154;
+    long int b = 100;
+    long int c = 12;
+    printf("%ld",~(a));
+    printf("%ld",(a & b));
+    printf("%ld",(a | b));
+    printf("%ld",(b ^ c));
+    return 0;
+}
+```
+### Ones complement
+If you don't know the bit size of a machine (32 or 64 or whatever) setting a bit to zero can be done by using complement method.
+eg:
+```
+// know that w1 = 1 
+w1 = w1 & 11111110;
+```
+This works fine if the system is 32 bit but what if it not?
+```c
+w1 = w1 & ~(1);
+```
+This works on any machine.
+1 is converted to its complement as per the system.
+
+### Bitwise shifting operators
+C has leftshift and rightshift operators.
+| Operator | Description |
+|:---:|:---:|
+| << | The leftshift operator. Shifts the entire binary to left. |
+| >> | The rightshift operator. Shifts the entire bnary towards right. |
+
+```c
+int a = 8; // 0000 0000 0000 0000 0000 0000 0000 1000
+a = a >> 1; // 0000 0000 0000 0000 0000 0000 0000 0100
+a = a << 1; // 0000 0000 0000 0000 0000 0000 0000 1000
+```
+An example for a stepper motor driver:
+```c
+#include <stdio.h>
+#include "functions.h"
+
+int main(int argc, char const *argv[])
+{
+    for (int j = 0; j < 100; j++)
+    {
+        int a = 8; // 0000 0000 0000 0000 0000 0000 0000 1000
+        for (int i = 0; i < 4; i++)
+        {
+            dectobin(a, 4);
+            a = a >> 1;
+        }
+    }
+
+    return 0;
+}
+```
+*If you shift beyond the bitsize of the computer you will get an undefined result*
+
+### Bitmasks
+
+Bitmask is a data that is used as a data for bitwise operations.
+
+It can be any pattern.
+eg: ```01101100```
+
+Using bitmaps we can use a single variable to save 32 different boolean values and set each bit on or off or toggle. optimization at it's peak.
+
+Using AND :
+
+Lets say we have a mask ```00000010``` Which is binary of 2, Then we can use this to AND with a number and we can set all bit except the 2nd will be set to zero. eg:
+```c
+#include <stdio.h>
+#include "functions.h"
+int main(int argc, char const *argv[])
+{
+    int mask = 1;
+    int num = 129;
+    int result = num & mask;
+    printf("%ld masked by %ld is %ld",dectobinr(num),dectobinr(mask), dectobinr(result));
+    return 0;
+    //Out: 10000001 masked by 1 is 1
+}
+```
+
+Also using OR:
+
+We can set a specific bit without touching others. eg:
+
+```c
+#include <stdio.h>
+#include "functions.h"
+int main(int argc, char const *argv[])
+{
+    int mask = 1;
+    int num = 64;
+    int result = num | mask;
+    printf("%ld masked by %ld is %ld",dectobinr(num),dectobinr(mask), dectobinr(result));
+    
+    return 0;
+    // Out: 1000000 masked by 1 is 1000001
+}
+
+```
+
+Also We can do the opposite of first. Using and and complement we can turn of a specific bit without touching others ( above we did turn off all except one). Just complement the mask and AND it. eg: 
+```c
+#include <stdio.h>
+#include "functions.h"
+int main(int argc, char const *argv[])
+{ 
+    int mask = 1;
+    int num = 255;
+    int result = num & (~mask);
+    printf("%ld masked by %ld is %ld",dectobinr(num),dectobinr(mask), dectobinr(result));
+    return 0;
+    // Out: 11111111 masked by 1 is 11111110
+}
+
+```
+### Packing Data using BitOps
+We can use bitwise opertions to pack datas consisting of boolean values.
+For Example let's build a simple yes or no quiz and store the input in a single variable.
+```c
+#include <stdio.h>
+#include <math.h>
+#include "functions.h"
+
+int main(int argc, char const *argv[])
+{
+    int a = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        int temp;
+        printf("question? (1 = Yes,0 = No) : ");
+        scanf("%d", &temp);
+        if (temp == 1)
+        {
+            a = a | (int)pow(2, i);
+        }
+    }
+    printf("\nThe integer value is: %d\nBinary number is: ",a);
+    dectobin(a, 8);
+    return 0;
+}
+```
+```
+Output:
+question? (1 = Yes,0 = No) : 1
+question? (1 = Yes,0 = No) : 0 
+question? (1 = Yes,0 = No) : 0
+question? (1 = Yes,0 = No) : 1
+question? (1 = Yes,0 = No) : 1
+question? (1 = Yes,0 = No) : 1
+question? (1 = Yes,0 = No) : 1
+question? (1 = Yes,0 = No) : 1
+
+The integer value is: 249
+Binary number is: 11111001
+```
+
+### Packing using Bit fields
+Bit fields allow us to specify the number of bits an integer can have in a struct.
+Using a special syntax we can define a bitfield and define a name to it.
+should use explicit declarations like signed or unsigned to avoid hardware issues.
+
+ - Better Memory utilization.
+- allow us to allocate a specified number of its.
+- Can easily set and retrive data without any bitwise operations.
+
+Eg:
+```c
+#include <stdio.h>
+
+struct packed
+{
+    unsigned int :3; // Padding
+    unsigned int f1:1; // Just some variables 
+    unsigned int f2:1;
+    unsigned int f3:1;
+    unsigned int type:8;
+    unsigned int index:18;
+}; // This uses 4bytes
+
+struct packed2
+{
+    unsigned int f1;
+    unsigned int f2;
+    unsigned int f3;
+    unsigned int type;
+    unsigned int index;
+}; // This uses 20 bytes 
+
+
+int main(int argc, char const *argv[])
+{
+    printf("%lu",sizeof(struct packed)); // Out : 4
+
+    struct packed p1;
+
+    p1.f1 = 1;  // 0000 0000 0000 0000 0000 0000 0000 00010
+    // These are now easy as just variables.
+    return 0;
+}
+```
+
+### What you know
+
+Convert the following decimal value to binary:123
+
+Convert the following binary values to decimal:00010110
+
+Convert the following binary values to decimal:01001100
+
+The bits in the result of an expression using the __________ operator are set to 1 if the corresponding bits in each operand are set to 1. Otherwise, the bits are set to zero.
+
+The bits in the result of an expression using the __________ operator are set to 1 if exactly one of the corresponding bits in either operand is set to 1. Otherwise, the bits are set to zero.
+
+The __________ and __________ operators are used to shift the bits of a value to the left or to the right, respectively.
+
+Evaluate the following expression; assume each value is 8 bits:~3
+
+Evaluate the following expression; assume each value is 8 bits:3 & 6
+
+Evaluate the following expressions; assume each value is 8 bits:1 | 6
+
+Evaluate the following expression; assume each value is 8 bits:3 ^ 6
+
+Evaluate the following expression; assume each value is 8 bits:7 >> 1
+
+Evaluate the following expression; assume each value is 8 bits:7 << 2
+
+What will be the output of the following program? #include <stdio.h> int main() { int c = 2 ^ 3; printf("%d\n", c); }
+### What you should review
+
+Convert the following decimal value to binary:5
+
+Which of the following data types are accepted while declaring bit-fields?
+
+
+
 
