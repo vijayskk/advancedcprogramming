@@ -684,6 +684,258 @@ Convert the following decimal value to binary:5
 
 Which of the following data types are accepted while declaring bit-fields?
 
+# Section 9
+## Advanced control flow
+### The ```goto``` statement.
 
+Causes a program to jump to a particular line of code.
+A label is needed and it follows same naming rules as a variable.
 
+```c
+#include <stdio.h>
 
+int main(int argc, char const *argv[])
+{
+    int index = 0;
+    while (1)
+    {
+        printf("%d\n",index);
+        if (index == 100)
+        {
+            goto exit;
+        }
+        index++;
+    }
+    exit:printf("The loop finished ");
+    return 0;
+}
+```
+We can also provide multiple statements to a label.
+```c
+exit:
+    printf("The loop finished ");
+    printf("\nExitting....");
+```
+### Problems of ```goto``` 
+- Inturrupts the natural flow of the code so it is harder to follow and maintain.
+ 
+- Using many goto together makes the program impossible to follow
+
+### Avoiding goto
+
+We are not required to use a ```goto``` statement in our codes except some programming languages like fortran etc ... 
+
+| Need | Method | 
+| :---: | :---: |
+| To skip an iteration |  ```continue``` |
+| To breakout the loop |  ```break``` |
+| When to exit multiple nested loops at one time |  ```goto``` |
+
+### The Null Statement
+
+Null statement differs from null pointer or object. It is a statement that can be told when you need to do absolute nothing and you don't want a syntax error. Null statement is essentially just a ```;``` and C will interpret any semicolon as an end of statement. Eg:
+
+```c
+while(*text++ = getchar() != '\n'){
+    // Empty
+}
+```
+This generates an empty body loop syntax error. There we can use the null statement.
+
+```c
+while(*text++ = getchar() != '\n'){
+    ; // Null statment
+}
+```
+
+### The comma operator ```,```
+
+Don't be confused with normal seperator commas, This comma can used to put operations in place of expressions. Eg:
+
+```c
+while(i<100){
+    sum += data[i] ,i++;
+    // This will add and save data[i] and then increment i.
+}
+```
+Another example when using paranthasis:
+```c
+int j = (f1(),f2());
+// f1() will be executed first and then f2() will be executed and then the result of f2() will be saved to j.
+```
+Another one:
+```c
+x = (y=3,(z= ++y + 2) + 5);
+// Here y=3 will execute first then y incremented and added by 2 and that value stored in z. and then add it with 5 and stored to x. So x will be 11.
+```
+Can be appied in loops:
+```c
+for(i=0,j=0;i<=10;i++,j++);
+// This loop will increment both i and j.
+```
+Also if we need to run functions just use a comma :-).
+```c
+printf("Hello"),
+printf("World"),
+printf("Vijay");
+```
+
+### The ```setjmp()``` and ```longjmp()``` functions
+
+They are functions which lets you advanced controll flow in C. 
+Mainly used to implement exception handling in C.
+As a C++ alternative ```setjmp()``` can be said as ```try``` and  ```longjmp()``` can be said as ```throw```.
+
+```c
+void function1(){
+    void function2(){
+        // Say here an error
+    }
+}
+```
+returning the values one by one will be a tedious task and we can't use a global variable for errors. So in this situation we can use ```setjmp()``` and ```longjmp()```.
+
+They are basically similiar to ```goto``` but one of the disadvantage of goto is it can only jump to labels in same function. Here we can jump into any function or even a different file.
+
+### How it works
+
+- ```setjmp()``` saves a copy of program counter and the current stack top pointer.
+- ```c
+    int i = setjmp(jmp_buf buf)
+
+    ```
+    Use the variable ```buf``` to remember where we are now.
+- Now wherever we call ```longjmp()``` with a value it will return that value to the ```setjmp()``` varaible and continue executing there.
+
+```c
+#include <stdio.h>
+#include <setjmp.h> // This must be added
+#include <stdlib.h>
+
+jmp_buf buf;
+int main(int argc, char const *argv[])
+{
+    int i = setjmp(buf); // This creates a process and saves it
+    printf("i = %d\n",i);
+
+    if (i > 0)
+    {
+        exit(0); // This will run if it longjumped.
+    }
+    
+
+    longjmp(buf,42); // This returns the value 42 to the saved process and continue from there.
+
+    printf("This will not print."); // This will not print
+    return 0;
+}
+```
+
+This can be also done from functions:
+```c
+#include <stdio.h>
+#include <setjmp.h> // This must be added
+#include <stdlib.h>
+
+jmp_buf buf;
+
+void myFunction(){
+    printf("At myFunction\n");
+
+    longjmp(buf,40); // This jumps to the main function to the saved process and returns 40.
+
+    printf("This will not be printed");
+}
+
+int main(int argc, char const *argv[])
+{
+    int i = setjmp(buf); // This creates a process and saves it
+    printf("i = %d\n",i);
+
+    if (i > 0)
+    {
+        exit(0); // This will run if it longjumped.
+    }
+    
+    myFunction();
+    
+
+    printf("This will not print."); // This will not print
+    return 0;
+}
+```
+
+### Use case
+
+We can define error codes and we can handle the errors across the program.
+
+```c
+#define NOT_FOUND 404
+#define BAD_REQUEST 304
+#define SERVER_DOWN 504
+
+#include <stdio.h>
+#include <setjmp.h>
+#include <stdlib.h>
+
+jmp_buf errbuf;
+
+void function1()
+{
+    // A not found error occures here...
+    longjmp(errbuf, NOT_FOUND);
+}
+
+void function2()
+{
+    // A bad request error occures here...
+    longjmp(errbuf, BAD_REQUEST);
+}
+
+void function3()
+{
+    // A server error occures here...
+    longjmp(errbuf, SERVER_DOWN);
+}
+
+void handleError()
+{
+    switch (setjmp(errbuf))
+    {
+    case NOT_FOUND:
+        printf("\nThe webpage you looking not found...");
+        exit(0);
+        break;
+
+    case BAD_REQUEST:
+        printf("\nBad request found...");
+        exit(0);
+        break;
+
+    case SERVER_DOWN:
+        printf("\nThe server is down...");
+        exit(0);
+        break;
+    case 0:
+        break;
+    default:
+        printf("\nUndiscovered error occured...");
+        exit(0);
+        break;
+    }
+}
+
+int main(int argc, char const *argv[])
+{
+
+    handleError();
+
+    printf("Main function executes");
+
+    function1();
+    function2();
+    function3();
+
+    return 0;
+}
+```
