@@ -5,228 +5,6 @@
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 
 <style>
-/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-body {
-	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
-	font-size: var(--vscode-markdown-font-size, 14px);
-	padding: 0 26px;
-	line-height: var(--vscode-markdown-line-height, 22px);
-	word-wrap: break-word;
-}
-
-#code-csp-warning {
-	position: fixed;
-	top: 0;
-	right: 0;
-	color: white;
-	margin: 16px;
-	text-align: center;
-	font-size: 12px;
-	font-family: sans-serif;
-	background-color:#444444;
-	cursor: pointer;
-	padding: 6px;
-	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
-}
-
-#code-csp-warning:hover {
-	text-decoration: none;
-	background-color:#007acc;
-	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
-}
-
-body.scrollBeyondLastLine {
-	margin-bottom: calc(100vh - 22px);
-}
-
-body.showEditorSelection .code-line {
-	position: relative;
-}
-
-body.showEditorSelection .code-active-line:before,
-body.showEditorSelection .code-line:hover:before {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: -12px;
-	height: 100%;
-}
-
-body.showEditorSelection li.code-active-line:before,
-body.showEditorSelection li.code-line:hover:before {
-	left: -30px;
-}
-
-.vscode-light.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.15);
-}
-
-.vscode-light.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.40);
-}
-
-.vscode-light.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-dark.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.4);
-}
-
-.vscode-dark.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.60);
-}
-
-.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-high-contrast.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 160, 0, 0.7);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 160, 0, 1);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-img {
-	max-width: 100%;
-	max-height: 100%;
-}
-
-a {
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-
-a:focus,
-input:focus,
-select:focus,
-textarea:focus {
-	outline: 1px solid -webkit-focus-ring-color;
-	outline-offset: -1px;
-}
-
-hr {
-	border: 0;
-	height: 2px;
-	border-bottom: 2px solid;
-}
-
-h1 {
-	padding-bottom: 0.3em;
-	line-height: 1.2;
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-}
-
-h1, h2, h3 {
-	font-weight: normal;
-}
-
-table {
-	border-collapse: collapse;
-}
-
-table > thead > tr > th {
-	text-align: left;
-	border-bottom: 1px solid;
-}
-
-table > thead > tr > th,
-table > thead > tr > td,
-table > tbody > tr > th,
-table > tbody > tr > td {
-	padding: 5px 10px;
-}
-
-table > tbody > tr + tr > td {
-	border-top: 1px solid;
-}
-
-blockquote {
-	margin: 0 7px 0 5px;
-	padding: 0 16px 0 10px;
-	border-left-width: 5px;
-	border-left-style: solid;
-}
-
-code {
-	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
-	font-size: 1em;
-	line-height: 1.357em;
-}
-
-body.wordWrap pre {
-	white-space: pre-wrap;
-}
-
-pre:not(.hljs),
-pre.hljs code > div {
-	padding: 16px;
-	border-radius: 3px;
-	overflow: auto;
-}
-
-pre code {
-	color: var(--vscode-editor-foreground);
-	tab-size: 4;
-}
-
-/** Theming */
-
-.vscode-light pre {
-	background-color: rgba(220, 220, 220, 0.4);
-}
-
-.vscode-dark pre {
-	background-color: rgba(10, 10, 10, 0.4);
-}
-
-.vscode-high-contrast pre {
-	background-color: rgb(0, 0, 0);
-}
-
-.vscode-high-contrast h1 {
-	border-color: rgb(0, 0, 0);
-}
-
-.vscode-light table > thead > tr > th {
-	border-color: rgba(0, 0, 0, 0.69);
-}
-
-.vscode-dark table > thead > tr > th {
-	border-color: rgba(255, 255, 255, 0.69);
-}
-
-.vscode-light h1,
-.vscode-light hr,
-.vscode-light table > tbody > tr + tr > td {
-	border-color: rgba(0, 0, 0, 0.18);
-}
-
-.vscode-dark h1,
-.vscode-dark hr,
-.vscode-dark table > tbody > tr + tr > td {
-	border-color: rgba(255, 255, 255, 0.18);
-}
-
-</style>
-
-<style>
 /* Tomorrow Theme */
 /* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
 /* Original theme - https://github.com/chriskempson/tomorrow-theme */
@@ -300,58 +78,6 @@ pre code {
 .hljs-strong {
 	font-weight: bold;
 }
-</style>
-
-<style>
-/*
- * Markdown PDF CSS
- */
-
- body {
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
-	padding: 0 12px;
-}
-
-pre {
-	background-color: #f8f8f8;
-	border: 1px solid #cccccc;
-	border-radius: 3px;
-	overflow-x: auto;
-	white-space: pre-wrap;
-	overflow-wrap: break-word;
-}
-
-pre:not(.hljs) {
-	padding: 23px;
-	line-height: 19px;
-}
-
-blockquote {
-	background: rgba(127, 127, 127, 0.1);
-	border-color: rgba(0, 122, 204, 0.5);
-}
-
-.emoji {
-	height: 1.4em;
-}
-
-code {
-	font-size: 14px;
-	line-height: 19px;
-}
-
-/* for inline code */
-:not(pre):not(.hljs) > code {
-	color: #C9AE75; /* Change the old color so it seems less like an error */
-	font-size: inherit;
-}
-
-/* Page Break : use <div class="page"/> to insert page break
--------------------------------------------------------- */
-.page {
-	page-break-after: always;
-}
-
 </style>
 
 <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
@@ -1294,6 +1020,292 @@ jmp_buf errbuf;
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </div></code></pre>
+<h3 id="what-you-know">What you know</h3>
+<p>What will be the output of the following program? #include &lt;stdio.h&gt; int main() { printf(&quot;%d &quot;, 1); goto l1; printf(&quot;%d &quot;, 2); l1:goto l2; printf(&quot;%d &quot;, 3); l2:printf(&quot;%d &quot;, 4); }</p>
+<p>What will be the output of the following program? #include &lt;stdio.h&gt; int main() { printf(&quot;%d &quot;, 5); goto l1; printf(&quot;%d &quot;, 6); } void foo() { l1 : printf(“7 &quot;, 7); }</p>
+<p>The &quot;null statement&quot; is an expression statement with the expression missing  (T/F)</p>
+<p>What is the output of the following program?int x = (249,500); printf(“x is %d\n”, x);</p>
+<p>The below code is an example of using the comma operator (T/F)int a = 1, b = 2;</p>
+<p>What is the output of the following program?#include &lt;stdio.h&gt; int main(void) { int i; char ch; for (i = 0, ch = 'A'; i &lt; 4; i++, ch += 2 * i) printf(&quot;%c&quot;, ch); return 0; }</p>
+<p>What is the output of the following program?#include &lt;setjmp.h&gt; #include &lt;stdio.h&gt; jmp_buf buf; int main(void) { int i = setjmp(buf); printf(&quot;i = %d\n&quot;, i); longjmp(buf, 42); printf(&quot;Does this line get printed?\n&quot;); return 0; }</p>
+<p>The setjmp and longjmp function call is equivalent to the goto statement (T/F)</p>
+<h1 id="section-10">Section 10</h1>
+<h2 id="input-and-output">Input and Output</h2>
+<p>The <code>stdio.h</code> includes all the necessory input and output functions we needed. When we run any C program,<code>stdin</code>,<code>stdout</code>,<code>stderr</code> are automatically executed (defined in <code>stdio.h</code>). They are required by the terminal they run on. Anyway we have to include it (<code>stdio.h</code>) in our program to use it. The don't take any advantages of a specfic system so they are portble to any os.</p>
+<h3 id="input-functions">Input functions</h3>
+<h4 id="char"><code>char</code></h4>
+<p>First let's look at the char functions.</p>
+<h4 id="getc"><code>getc()</code></h4>
+<p><code>getc</code> can be used to print from both a file and the <code>stdin</code> (terminal)</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">char</span> ch = <span class="hljs-string">'\0'</span>;
+    FILE * fp;
+    fp = fopen(<span class="hljs-string">"hello.txt"</span>,<span class="hljs-string">"rw"</span>);
+    <span class="hljs-keyword">while</span> (ch != EOF)
+    {
+        ch = getc(fp);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%c"</span>,ch);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+} <span class="hljs-comment">// This will print the file out</span>
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">char</span> ch = <span class="hljs-string">' '</span>;
+    <span class="hljs-keyword">int</span> firstTime = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>)
+    {
+        ch = getc(<span class="hljs-built_in">stdin</span>);
+        <span class="hljs-keyword">if</span> (firstTime == <span class="hljs-number">1</span>)
+        {
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">"You said : "</span>);
+            firstTime = <span class="hljs-number">0</span>;
+        }
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%c"</span>, ch);
+        <span class="hljs-keyword">if</span> (ch == <span class="hljs-string">'\n'</span>)
+        {
+            firstTime = <span class="hljs-number">1</span>;
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+<span class="hljs-comment">// This will repeat what you give in stdin.</span>
+</div></code></pre>
+<h4 id="fgetc"><code>fgetc()</code></h4>
+<p>Similiar to the <code>getc</code> we can use <code>fgetc</code></p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> FILENAME <span class="hljs-meta-string">"hello.txt"</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    FILE * fp = <span class="hljs-literal">NULL</span>;
+    fp = fopen(FILENAME,<span class="hljs-string">"rw"</span>);
+    <span class="hljs-keyword">if</span> (fp == <span class="hljs-literal">NULL</span>)
+    {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Opening %s failed..."</span>,FILENAME);\
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);
+    }<span class="hljs-keyword">else</span>{
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"File %s Opened....\n\n"</span>,FILENAME);
+
+    }
+    
+    <span class="hljs-keyword">char</span> ch = <span class="hljs-string">' '</span>;
+    <span class="hljs-keyword">while</span> (ch = fgetc(fp),ch != EOF)
+    {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%c"</span>, ch);
+    }
+    fclose(fp);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\n\nFile %s Closed....\n"</span>,FILENAME);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+</div></code></pre>
+<h4 id="ungetc"><code>ungetc()</code></h4>
+<p>If we have to skip a charecter we can use ungetc.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">char</span> ch = <span class="hljs-string">' '</span>;
+    <span class="hljs-keyword">while</span> ((ch = (<span class="hljs-keyword">char</span>)getc(<span class="hljs-built_in">stdin</span>)) == <span class="hljs-string">' '</span>  )
+    {
+        ungetc(ch,<span class="hljs-built_in">stdin</span>); <span class="hljs-comment">// skips and gives the next charecter to ch.</span>
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Char is : %c"</span>,ch);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="output-functions">Output Functions</h3>
+<h4 id="putc"><code>putc()</code></h4>
+<p>Puts a single charecter into a file or stdout if it is provided with stream.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">char</span> name[] = <span class="hljs-string">"Vijay"</span>;
+    FILE * fp = fopen(<span class="hljs-string">"hello.txt"</span>,<span class="hljs-string">"w"</span>);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span>(name) - <span class="hljs-number">1</span>; i++)
+    {
+        putc(name[i],fp);
+    }
+    fclose(fp);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>Using stdout:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">char</span> name[] = <span class="hljs-string">"Vijay"</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span>(name) - <span class="hljs-number">1</span>; i++)
+    {
+        putc(name[i],<span class="hljs-built_in">stdout</span>);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h4 id="fputc"><code>fputc()</code></h4>
+<p><code>fputc()</code> is exclusively for files.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    FILE * fp = fopen(<span class="hljs-string">"hello.txt"</span> , <span class="hljs-string">"w"</span>);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">char</span> i = <span class="hljs-string">'A'</span>; i &lt;= <span class="hljs-string">'Z'</span>; i++)
+    {
+        fputc(i,fp);
+    }
+    fclose(fp);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="string-functions">String Functions</h3>
+<h4 id="gets"><code>gets()</code></h4>
+<p>Reads a line from <code>stdio</code>. Reads until the <em>EOF</em> or <code>'\n'</code> is found.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">char</span> * <span class="hljs-title">gets</span><span class="hljs-params">(<span class="hljs-keyword">char</span> * str)</span></span>;
+</div></code></pre>
+<p><strong>DO NOT USE</strong></p>
+<p><strong>DEPRICATED</strong></p>
+<p><strong>STAY THE F*CK OUT</strong></p>
+<p>Problems:</p>
+<ul>
+<li>No check for buffer overflow is permitted</li>
+<li>It is impossible to tell without knowing advance how much data will <code>gets()</code> read.</li>
+</ul>
+<h4 id="fgets"><code>fgets()</code></h4>
+<p>Reading entire line of data from file/stream. Have similiar behavior to <code>gets</code>. Accept two additional arguments.</p>
+<ul>
+<li>The number of charecters to read.</li>
+<li>An input stream</li>
+</ul>
+<p>We can specify a maximum buffer and it will read untill a newline charecter occures or the maximum of buffer reached.
+Not Recommended for performace reasons.</p>
+<p><em><strong>DEPRICATED</strong></em></p>
+<p>Problems:</p>
+<ul>
+<li>A null charecter is not specified.</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MAXLEN 30</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">char</span> str[MAXLEN];
+    fgets(str,MAXLEN,<span class="hljs-built_in">stdin</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s\n"</span>,str);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h4 id="getline"><code>getline()</code></h4>
+<p><code>getline()</code> is the latest function for reading string from stream.</p>
+<ul>
+<li>Have to pass a double pointer allocated by <code>malloc</code> or <code>calloc</code>.</li>
+<li>Automatically calls <code>realloc</code> when needed so no memory shortage.</li>
+<li>Have to pass the pointer to the <code>size_t</code> type variable which holds the size of first parameter.</li>
+<li>Third is an input stream.</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">ssize_t</span> <span class="hljs-title">getline</span><span class="hljs-params">(<span class="hljs-keyword">char</span> ** <span class="hljs-built_in">buffer</span>,<span class="hljs-keyword">ssize_t</span> * <span class="hljs-built_in">size</span>,FILE * stream)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">char</span> * <span class="hljs-built_in">buffer</span> = <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">char</span> <span class="hljs-built_in">buffer</span>[<span class="hljs-number">32</span>];
+    <span class="hljs-keyword">size_t</span> bufsize = <span class="hljs-number">32</span>;
+    <span class="hljs-keyword">size_t</span> charecters;
+
+    <span class="hljs-built_in">buffer</span> = (<span class="hljs-keyword">char</span> *) <span class="hljs-built_in">malloc</span>(bufsize * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">char</span>));
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">buffer</span> == <span class="hljs-literal">NULL</span>)
+    {
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+    }
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Type Something: "</span>);
+    charecters = getline(&amp;<span class="hljs-built_in">buffer</span>,&amp;bufsize,<span class="hljs-built_in">stdin</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"You typed: %s\nNumber of charecters read: %zu \n"</span>,<span class="hljs-built_in">buffer</span>,charecters - <span class="hljs-number">1</span>);
+    
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h4 id="puts"><code>puts()</code></h4>
+<p>Puts method can be used to display a string to the stdout and it automatically adds a newline charecter to the end of the string.</p>
+<p>It is much more safe and simple but it cannot do any formatting as of the <code>printf</code>. So if you need to rely on variables stay away from <code>puts</code>.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">puts</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * <span class="hljs-built_in">string</span>)</span></span>;
+</div></code></pre>
+<p>It also have a sibling function called fputs. It simply write the string to the stream provided.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">fputs</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * <span class="hljs-built_in">string</span>,FILE * fptr)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">char</span> <span class="hljs-built_in">string</span>[<span class="hljs-number">30</span>] = <span class="hljs-string">"Hello Vijay..."</span>;
+
+    FILE * fp = fopen(<span class="hljs-string">"output.txt"</span>,<span class="hljs-string">"w"</span>);
+    <span class="hljs-built_in">puts</span>(<span class="hljs-built_in">string</span>);
+    <span class="hljs-keyword">if</span> (fp !=  <span class="hljs-literal">NULL</span>)
+    {
+        <span class="hljs-built_in">fputs</span>(<span class="hljs-built_in">string</span>,fp);
+    }
+    
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="formating-functions">Formating Functions</h3>
+<h4 id="sprintf"><code>sprintf()</code></h4>
+<p>Outputs formated string to another string.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sprintf</span><span class="hljs-params">(<span class="hljs-keyword">char</span> * <span class="hljs-built_in">string</span>,<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * format, ... )</span></span>;
+</div></code></pre>
+<ul>
+<li>Returns the number of charecters stored inside the string.</li>
+<li>Unsafe because it won't check the destination's size before saving the string.</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">char</span> <span class="hljs-built_in">string</span>[<span class="hljs-number">100</span>];
+    <span class="hljs-built_in">sprintf</span>(<span class="hljs-built_in">string</span>,<span class="hljs-string">"\n   \033[4mNAME CARD\033[0m\n\n Name: %s\n Age: %s\n\n"</span>,argv[<span class="hljs-number">1</span>],argv[<span class="hljs-number">2</span>]);
+    <span class="hljs-built_in">puts</span>(<span class="hljs-built_in">string</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h4 id="fscanf-and-fprintf"><code>fscanf()</code> and <code>fprintf()</code></h4>
+<p>Does the same as scanf and printf but for a stream. Nothing more.</p>
+<h4 id="sscanf"><code>sscanf()</code></h4>
+<p>scan data from a formatted string unlike <code>stdin</code>.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sscanf</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * str, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * input,...)</span></span>;
+</div></code></pre>
+<h4 id="fflush"><code>fflush()</code></h4>
+<p>It is used to clean a buffer or file.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">fflush</span><span class="hljs-params">(FILE * fp)</span></span>;
+</div></code></pre>
+<h2 id="what-you-know">What you know</h2>
+<p>What is the output of the following code?#include &lt;stdio.h&gt; #include &lt;stdlib.h&gt; #include &lt;ctype.h&gt; int main(int argc, char *argv[]) { int ch; FILE *fp; if (argc &lt; 2) exit(EXIT_FAILURE); if ( (fp = fopen(argv[1], &quot;r&quot;)) == NULL) exit(EXIT_FAILURE); while ( (ch= getc(fp)) != EOF ) if( isdigit(ch) ) putchar(ch); fclose (fp); return 0; }</p>
+<p>What is the default return type of getchar()?</p>
+<p>What is EOF?</p>
+<p>ungetc() is used __________</p>
+<p>The gets() function checks for a buffer overflow. (T/F)</p>
+<p>The syntax of the fgets function is:char *fgets(char *line, int maxline, FILE *fp)Which of the below statements is true regarding fgets?</p>
+<h2 id="what-you-should-review">What you should review</h2>
+<p>Is putchar(getchar()) a valid expression; what does it do? Is getchar(putchar()) also valid?</p>
+<p>What will be the output of the following code? #include &lt;stdio.h&gt; int main() { int n = 0; scanf(&quot;%d&quot;, &amp;n); ungetc(n, stdin); scanf(&quot;%d&quot;, &amp;n); printf(&quot;%d\n&quot;, n); return 0; }</p>
+<p>The fputs()function adds a newline character to the end of the string that is written. (T/F)</p>
+<p>What is the difference between each statement below?printf(&quot;Hello, %s\n&quot;, name); fprintf(stdout, &quot;Hello, %s\n&quot;, name); fprintf(stderr, &quot;Hello, %s\n&quot;, name);</p>
 
 </body>
 </html>
