@@ -939,3 +939,347 @@ int main(int argc, char const *argv[])
     return 0;
 }
 ```
+
+### What you know
+
+What will be the output of the following program? #include <stdio.h> int main() { printf("%d ", 1); goto l1; printf("%d ", 2); l1:goto l2; printf("%d ", 3); l2:printf("%d ", 4); }
+
+What will be the output of the following program? #include <stdio.h> int main() { printf("%d ", 5); goto l1; printf("%d ", 6); } void foo() { l1 : printf(“7 ", 7); }
+
+The "null statement" is an expression statement with the expression missing  (T/F)
+
+What is the output of the following program?int x = (249,500); printf(“x is %d\n”, x);
+
+The below code is an example of using the comma operator (T/F)int a = 1, b = 2;
+
+What is the output of the following program?#include <stdio.h> int main(void) { int i; char ch; for (i = 0, ch = 'A'; i < 4; i++, ch += 2 * i) printf("%c", ch); return 0; }
+
+What is the output of the following program?#include <setjmp.h> #include <stdio.h> jmp_buf buf; int main(void) { int i = setjmp(buf); printf("i = %d\n", i); longjmp(buf, 42); printf("Does this line get printed?\n"); return 0; }
+
+The setjmp and longjmp function call is equivalent to the goto statement (T/F)
+
+# Section 10
+## Input and Output
+
+The ```stdio.h``` includes all the necessory input and output functions we needed. When we run any C program,```stdin```,```stdout```,```stderr``` are automatically executed (defined in ```stdio.h```). They are required by the terminal they run on. Anyway we have to include it (```stdio.h```) in our program to use it. The don't take any advantages of a specfic system so they are portble to any os.
+
+### Input functions
+
+#### ```char``` 
+ First let's look at the char functions.
+#### ```getc()```
+```getc``` can be used to print from both a file and the ```stdin``` (terminal)
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    char ch = '\0';
+    FILE * fp;
+    fp = fopen("hello.txt","rw");
+    while (ch != EOF)
+    {
+        ch = getc(fp);
+        printf("%c",ch);
+    }
+    return 0;
+} // This will print the file out
+```
+
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    char ch = ' ';
+    int firstTime = 1;
+    while (1)
+    {
+        ch = getc(stdin);
+        if (firstTime == 1)
+        {
+            printf("You said : ");
+            firstTime = 0;
+        }
+        printf("%c", ch);
+        if (ch == '\n')
+        {
+            firstTime = 1;
+        }
+    }
+    return 0;
+}
+// This will repeat what you give in stdin.
+```
+
+#### ```fgetc()```
+Similiar to the ```getc``` we can use ```fgetc```
+```c
+#define FILENAME "hello.txt"
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char const *argv[])
+{
+    FILE * fp = NULL;
+    fp = fopen(FILENAME,"rw");
+    if (fp == NULL)
+    {
+        printf("Opening %s failed...",FILENAME);\
+        exit(0);
+    }else{
+        printf("File %s Opened....\n\n",FILENAME);
+
+    }
+    
+    char ch = ' ';
+    while (ch = fgetc(fp),ch != EOF)
+    {
+        printf("%c", ch);
+    }
+    fclose(fp);
+    printf("\n\nFile %s Closed....\n",FILENAME);
+    return 0;
+}
+
+```
+#### ```ungetc()```
+If we have to skip a charecter we can use ungetc.
+
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    char ch = ' ';
+    while ((ch = (char)getc(stdin)) == ' '  )
+    {
+        ungetc(ch,stdin); // skips and gives the next charecter to ch.
+    }
+    printf("Char is : %c",ch);
+    return 0;
+}
+```
+### Output Functions
+
+#### ```putc()```
+Puts a single charecter into a file or stdout if it is provided with stream.
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    char name[] = "Vijay";
+    FILE * fp = fopen("hello.txt","w");
+    for (int i = 0; i < sizeof(name) - 1; i++)
+    {
+        putc(name[i],fp);
+    }
+    fclose(fp);
+    return 0;
+}
+```
+Using stdout:
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    char name[] = "Vijay";
+    for (int i = 0; i < sizeof(name) - 1; i++)
+    {
+        putc(name[i],stdout);
+    }
+    return 0;
+}
+```
+#### ```fputc()```
+```fputc()``` is exclusively for files.
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    FILE * fp = fopen("hello.txt" , "w");
+    for (char i = 'A'; i <= 'Z'; i++)
+    {
+        fputc(i,fp);
+    }
+    fclose(fp);
+    return 0;
+}
+```
+
+### String Functions
+
+#### ```gets()```
+Reads a line from ```stdio```. Reads until the *EOF* or ```'\n'``` is found.
+```c
+char * gets(char * str);
+```
+**DO NOT USE**
+
+**DEPRICATED**
+
+**STAY THE F*CK OUT**
+
+Problems:
+- No check for buffer overflow is permitted
+- It is impossible to tell without knowing advance how much data will ```gets()``` read. 
+
+#### ```fgets()```
+
+Reading entire line of data from file/stream. Have similiar behavior to ```gets```. Accept two additional arguments.
+- The number of charecters to read.
+- An input stream 
+
+We can specify a maximum buffer and it will read untill a newline charecter occures or the maximum of buffer reached.
+Not Recommended for performace reasons.
+
+***DEPRICATED***
+
+Problems: 
+- A null charecter is not specified.
+
+```c
+#define MAXLEN 30
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    char str[MAXLEN];
+    fgets(str,MAXLEN,stdin);
+    printf("%s\n",str);
+    return 0;
+}
+```
+#### ```getline()```
+```getline()``` is the latest function for reading string from stream.
+- Have to pass a double pointer allocated by ```malloc``` or ```calloc```.
+- Automatically calls ```realloc``` when needed so no memory shortage.
+- Have to pass the pointer to the ```size_t``` type variable which holds the size of first parameter.
+- Third is an input stream.
+
+```c
+ssize_t getline(char ** buffer,ssize_t * size,FILE * stream);
+```
+Example:
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char const *argv[])
+{
+    char * buffer = NULL;
+    char buffer[32];
+    size_t bufsize = 32;
+    size_t charecters;
+
+    buffer = (char *) malloc(bufsize * sizeof(char));
+
+    if (buffer == NULL)
+    {
+        exit(1);
+    }
+
+    printf("Type Something: ");
+    charecters = getline(&buffer,&bufsize,stdin);
+    printf("You typed: %s\nNumber of charecters read: %zu \n",buffer,charecters - 1);
+    
+
+    return 0;
+}
+```
+#### ```puts()```
+Puts method can be used to display a string to the stdout and it automatically adds a newline charecter to the end of the string.
+
+It is much more safe and simple but it cannot do any formatting as of the ```printf```. So if you need to rely on variables stay away from ```puts```.
+
+```c
+int puts(const char * string);
+```
+It also have a sibling function called fputs. It simply write the string to the stream provided.
+```c
+int fputs(const char * string,FILE * fptr);
+```
+
+Example: 
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    char string[30] = "Hello Vijay...";
+
+    FILE * fp = fopen("output.txt","w");
+    puts(string);
+    if (fp !=  NULL)
+    {
+        fputs(string,fp);
+    }
+    
+    return 0;
+}
+```
+### Formating Functions
+#### ```sprintf()```
+
+Outputs formated string to another string. 
+```c
+int sprintf(char * string,const char * format, ... );
+```
+- Returns the number of charecters stored inside the string. 
+- Unsafe because it won't check the destination's size before saving the string.
+
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    char string[100];
+    sprintf(string,"\n   \033[4mNAME CARD\033[0m\n\n Name: %s\n Age: %s\n\n",argv[1],argv[2]);
+    puts(string);
+    return 0;
+}
+```
+#### ```fscanf()``` and ```fprintf()```
+Does the same as scanf and printf but for a stream. Nothing more.
+
+#### ```sscanf()```
+scan data from a formatted string unlike ```stdin```.
+```c
+int sscanf(const char * str, const char * input,...);
+```
+#### ```fflush()```
+It is used to clean a buffer or file.
+```c
+int fflush(FILE * fp);
+```
+
+## What you know
+
+What is the output of the following code?#include <stdio.h> #include <stdlib.h> #include <ctype.h> int main(int argc, char *argv[]) { int ch; FILE *fp; if (argc < 2) exit(EXIT_FAILURE); if ( (fp = fopen(argv[1], "r")) == NULL) exit(EXIT_FAILURE); while ( (ch= getc(fp)) != EOF ) if( isdigit(ch) ) putchar(ch); fclose (fp); return 0; }
+
+What is the default return type of getchar()?
+
+What is EOF?
+
+ungetc() is used __________
+
+The gets() function checks for a buffer overflow. (T/F)
+
+The syntax of the fgets function is:char *fgets(char *line, int maxline, FILE *fp)Which of the below statements is true regarding fgets?
+## What you should review
+
+Is putchar(getchar()) a valid expression; what does it do? Is getchar(putchar()) also valid?
+
+What will be the output of the following code? #include <stdio.h> int main() { int n = 0; scanf("%d", &n); ungetc(n, stdin); scanf("%d", &n); printf("%d\n", n); return 0; }
+
+The fputs()function adds a newline character to the end of the string that is written. (T/F)
+
+What is the difference between each statement below?printf("Hello, %s\n", name); fprintf(stdout, "Hello, %s\n", name); fprintf(stderr, "Hello, %s\n", name);
+
+
+
+
