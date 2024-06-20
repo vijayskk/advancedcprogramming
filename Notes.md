@@ -1257,7 +1257,7 @@ It is used to clean a buffer or file.
 int fflush(FILE * fp);
 ```
 
-## What you know
+### What you know
 
 What is the output of the following code?#include <stdio.h> #include <stdlib.h> #include <ctype.h> int main(int argc, char *argv[]) { int ch; FILE *fp; if (argc < 2) exit(EXIT_FAILURE); if ( (fp = fopen(argv[1], "r")) == NULL) exit(EXIT_FAILURE); while ( (ch= getc(fp)) != EOF ) if( isdigit(ch) ) putchar(ch); fclose (fp); return 0; }
 
@@ -1270,7 +1270,7 @@ ungetc() is used __________
 The gets() function checks for a buffer overflow. (T/F)
 
 The syntax of the fgets function is:char *fgets(char *line, int maxline, FILE *fp)Which of the below statements is true regarding fgets?
-## What you should review
+### What you should review
 
 Is putchar(getchar()) a valid expression; what does it do? Is getchar(putchar()) also valid?
 
@@ -1279,6 +1279,190 @@ What will be the output of the following code? #include <stdio.h> int main() { i
 The fputs()function adds a newline character to the end of the string that is written. (T/F)
 
 What is the difference between each statement below?printf("Hello, %s\n", name); fprintf(stdout, "Hello, %s\n", name); fprintf(stderr, "Hello, %s\n", name);
+
+# Section 11
+## Advanced Function concepts
+### Variadic Functions
+Variadic functioms are functions which can have variable number of arguments.```printf()``` is an example for that. Has two parts:
+- Mandatory arguments
+    - Need atleast one and it should be first
+    - Order is important
+- Optional arguments
+    - Listed after mandatory arguments
+
+
+The standard library ```stdarg.h``` provides the macro for writing our own varadic functions. Common practice is to pass the number of arguments as the first argument.
+
+**Steps to create a variadic function**
+- Provide a function prototype using an ellipse (three dots).
+    - Ellipse indicates there will be variables
+    - Atleast need one fixed argument
+    ```c
+    int addNumbers(int a,int b,...);
+    ```
+- Create a ```va_list``` type variable ( It is basically a list of arguments )
+- Copy the arguments list to that variable  using ```va_start```
+    -   ```c
+        int addNumbers(int a,int b,...){
+            va_list list;
+            va_start(list,b);
+
+            int c = va_arg(list,int);
+            int d = va_arg(list,int);
+            va_end(list);
+        }
+        ```
+- Then use the ```va_arg()``` to retrieve the variable.
+- Using multiple times will retrive the variable next.
+- Reset the ```va_list``` variable for starting from first optional variable again
+
+Example:
+```c
+#include <stdio.h>
+#include <stdarg.h>
+
+int addNumbers(int n, ...)
+{
+    va_list list;
+    va_start(list, n);
+    int sum = 0;
+    for (int i = 0; i < n; i++)
+    {
+        sum += va_arg(list, int);
+    }
+    va_end(list);
+    return sum;
+}
+
+int main(int argc, char const *argv[])
+{
+    printf("%d\n", addNumbers(2, 10, 20));
+    return 0;
+}
+```
+#### ```va_copy()```
+once an argument is retrieved it cannot be retreived again. So it is good to keep a copy of that for future uses. We can make a copy of the original va_list for future uses. We should do the copying before doing anything ( atfer ```va_start``` ) to the list.
+```c
+int addNumbers(int n, ...)
+{
+    va_list list;
+    va_list copiedList;
+
+    va_start(list, n);
+    va_copy(copiedList,list);
+
+    int sum = 0;
+    for (int i = 0; i < n; i++)
+    {
+        sum += va_arg(list, int);
+    }
+    va_end(list);
+    return sum;
+}
+```
+### Recursion
+For some types of programs, it is usefull to have a function call itself. Can be usefull when we have to do operations repeatedly. Ofcurse we can use loops. Only advantage of recursion is less code. 
+
+Example:
+```c
+#include <stdio.h>
+
+int fact(int n){
+    if (n == 1)
+    {
+        return 1;
+    }
+    return n * fact(n-1);
+    
+}
+
+int main(int argc, char const *argv[])
+{
+    printf("%d\n",fact(5));
+    return 0;
+}
+```
+The value of the argument must converge or else this will create an infinite loop.
+
+Each time we call a function it puts the instance into a stack and when the last functions returns a value the stack is removed one by one.
+
+### Inline functions
+When running a function it take execution time to setup the call,pass arguents,jump to function code etc. So C99 introduced a feature called inline functions to avoid this overhead.
+
+Inline declaration is a hint to the compiler that function is worth running fast. Compiler will avoid calling the function and replace it with inline code.
+It is just a suggestion not a guarantee to make it fast. It can make the code more lengthy and large program file size. Use it for short functions.
+
+To declare an inline function just give the ```inline``` keyword in the function declaration and the compiler will make the calling of this function inline.
+```c
+#include <stdio.h>
+
+int addNumbers(int a,int b){
+    return a+b;
+} // This function can be in another file.
+
+inline int addNumbers(int a,int b);
+
+int main(int argc, char const *argv[])
+{
+    printf("%d",addNumbers(10,20));
+    return 0;
+}
+```
+### ```_Noreturn``` functions
+This function type specifier is added in C11. This specifier tells the compiler to not to return the control from the function after it excecuted. Helps to prevent missusing of the function. This is just a hint to the compiler not a guarantee. 
+
+The ```exit()``` function is an example for _Noreturn function. After it called the control will not be given back. 
+
+You should not return anything explicitly from the function.
+
+```c
+#include <stdio.h>
+#include <stdnoreturn.h>
+#include <stdlib.h>
+
+noreturn void exitfrom(char * process,int code);
+ 
+void exitfrom(char * process,int code){
+    printf("Exitting from %s...",process);
+    exit(code);
+}
+
+int main(int argc, char const *argv[])
+{
+    exitfrom("Download",1);
+    return 0;
+}
+```
+### What you know
+
+What will be the output of the following code? #include <stdio.h> #include <stdarg.h> void func(int, ...); int main() { func(2, 3, 5, 7, 10, 13); return 0; } void func(int n, ...) { int number, i = 0; va_list start; va_start(start, n); while (i != 4) { number = va_arg(start, int); i++; } printf("%d", number); }
+
+Which of the following variadic functions with an ellipsis are illegal?
+
+Which header file includes a macro for variable number of arguments?
+
+Which of the following macros extracts an argument from the variable argument list and advances the pointer to the next argument?
+
+The type va_list in an argument list is used ________
+
+What is the purpose of va_end?
+
+What will be the output of the following code?int main() { int n; n=f1(5); printf("%d",n); } f1(int x) { int b; if(x==1) return 1; else b=x*f1(x-1); return b; }
+
+Iteration requires more system memory than recursion (T/F)
+
+A function whose definition can be substituted at a place where its function call is made is known as.
+
+What will be the error (if any) in the following code?void static inline func1(float b) { printf ("%lf\n",b*2); } int main() { inline func1(2.2); return 0; }
+
+The _NoReturn function specifier was added in C11. (T/F)
+
+Which header file includes the convenience macro noreturn?
+
+The purpose of the _Noreturn specifier is to inform the compiler that a particular function will not return control to the calling program when it completes execution.  The compiler will then use this information to always optimize your code.  (T/F)
+### What you should review
+
+In the absence of an exit condition in a recursive function, the following error occurs.
 
 
 
