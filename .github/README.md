@@ -1,1 +1,1 @@
-Notes.md
+[Click Here For Notes](../Notes.md)
