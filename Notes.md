@@ -1464,6 +1464,124 @@ The purpose of the _Noreturn specifier is to inform the compiler that a particul
 
 In the absence of an exit condition in a recursive function, the following error occurs.
 
+# Section 12
+## Unions
+Union is a derrived type (like struct) with members that store same storage space. Sometimes same type of construct need different type of data.
+- Can be used to save space and for alternating data.
+- A union doesn't waste storage on variables that are not being used.
 
+Each element in a union is called a member similiar to struct. Only one member can have a value at a given time. So only one member can be accessed at a time.
+
+The members of union can be any type. In most cases union will contain two or more datatypes. It is our responsiblity to ensure that the data is referenced with proper datatype.
+
+Operations on a union are:
+- Assigning of a union to another with the same type.
+- taking the address (&) of a union varable.
+- Accessing union members.
+### Use cases
+- Usefull in embeded programming with a low memory requierment because unions save memory.
+- For representing a table with mixed dayatypes.
+- Creating muli datatype arrays.
+- Representing files with different record types.
+- Representing a network interface containing different requests.
+
+| Struct | Union |
+| --- | --- |
+| Allocates space for all it's members seperately | one common memory space for all members |
+| Memory space calculated for each member | Memory space calculated for the largest member. Programmers can decide what to put there
+
+```c
+struct mystruct{
+    char a;
+    float b;
+}mystruct;
+```
+```c
+union myunion{
+    char a;
+    float b;
+}mystruct;
+```
+![EXAMPLE](images/union.png)
+![TABLE](images/union2.png)
+### Defining a union
+Defenition is similiar to the struct. use the ```union``` keyword instead.
+```c
+union data{
+    int a;
+    float b;
+    char c[20];
+}
+```
+This will take 20 bytes of memory because of ```c``` is the highest datatype. Structures can be defined containing unions.
+
+Unions can also be defined as arrays and can store as much as union elements we want in an array.
+```c
+#include <stdio.h>
+
+union Data
+{
+    int a;
+    float b;
+    char c[20];
+};
+struct Person
+{
+    char name[30];
+    int age;
+    union Data data;
+    union
+    {
+        int isDead;
+        char occupation[20];
+    };
+};
+
+struct
+{
+    char *name;
+    enum symbolType;
+    union
+    {
+        int i;
+        float f;
+        char c;
+    } data;
+} table[10];
+
+int main(int argc, char const *argv[])
+{
+    union Data data1, data2, *data3;
+    struct Person p1;
+    printf("%ld\n", sizeof(data1)); // OUT: 20
+    printf("%ld\n", sizeof(p1));    // OUT: 20
+    return 0;
+}
+```
+### Accessing union members.
+Accessing and assigning is also similiar to the struct.
+- dot (.) operator to access the members.
+- ```->``` operator to access the pointer type variables.
+
+Eg: ```name.member```
+
+### What you know
+
+A union will allocate storage space for all its members separately (T/F)
+
+Which of the following share a similarity in syntax to a Union?1. Object, 2. Structure, 3. Arrays, 4. Pointers
+
+What will be the output of the following code?union myUnion { int ival; float fval; }; void main() { union myUnion r; r.fval = 5.2; printf("%f", r.fval); }
+
+The size of a union is determined by the size of the __________
+
+What would be the size of the following union declaration?(Assuming size of double = 8, size of int = 4, size of char = 1)?union uTemp { double a; int b[10]; char c; } u;
+
+Members of a union are accessed as________________
+
+What will be the output of the following code?union p { int x; char y; }; int main() { union p a, b; a.y = 60; b.x = 12; printf("%d\n", a.y); }
+### What you should review
+
+How can you access the first character of the string sval?struct { char *name; union { char *sval; } u; } tab[10];
 
 
