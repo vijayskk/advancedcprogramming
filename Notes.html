@@ -1799,8 +1799,6 @@ It is just a suggestion not a guarantee to make it fast. It can make the code mo
     <span class="hljs-keyword">float</span> b;
 }mystruct;
 </div></code></pre>
-<p><img src="images/union.png" alt="EXAMPLE">
-<img src="images/union2.png" alt="TABLE"></p>
 <h3 id="defining-a-union">Defining a union</h3>
 <p>Defenition is similiar to the struct. use the <code>union</code> keyword instead.</p>
 <pre class="hljs"><code><div><span class="hljs-keyword">union</span> data{
@@ -1869,6 +1867,165 @@ It is just a suggestion not a guarantee to make it fast. It can make the code mo
 <p>What will be the output of the following code?union p { int x; char y; }; int main() { union p a, b; a.y = 60; b.x = 12; printf(&quot;%d\n&quot;, a.y); }</p>
 <h3 id="what-you-should-review">What you should review</h3>
 <p>How can you access the first character of the string sval?struct { char *name; union { char *sval; } u; } tab[10];</p>
+<h1 id="section-13">Section 13</h1>
+<h2 id="preprocessors">Preprocessors</h2>
+<p>The process of creating a c program involves:</p>
+<ul>
+<li>Preprocessing</li>
+<li>Compilation</li>
+<li>Assembling</li>
+<li>linking</li>
+<li>loading</li>
+</ul>
+<p>The preprocessor is evoked before the compiling. It is basically a text substitution tool.
+Preprocessor will do three steps</p>
+<ol>
+<li>Removes all comments: It is just for engineers understanding not needed for the execution.</li>
+<li>Includes all the files from various libraries that is needed to compile. We have to specify them using the <code>#include</code> directive.</li>
+<li>Expansion of macro defenitions.</li>
+</ol>
+<p>Commands used by preprocesors are called preprocessor directives. It should be the first nonblank charecter and should begin in the first column</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MAXLENGTH 10</span>
+</div></code></pre>
+<h3 id="conditional-compilation">Conditional Compilation</h3>
+<p>Often used to compile a single program according to the host machine. Usefull when we have a larger software with more dependancies. Can also be used to switch certain statements like debugging on or off.</p>
+<p>Each if the conditional preprocessor directives checks a constat integer expression;</p>
+<h4 id="ifdef"><code>#ifdef</code></h4>
+<p>Checks whether the identifier is defined or not. To set an identifier:</p>
+<p><code>#define UNIX 1</code> or <code>#define UNIX</code></p>
+<p>Or we can also use commandline arguments to define an identifier</p>
+<pre class="hljs"><code><div>gcc hello.c -D UNIX
+</div></code></pre>
+<p>The <code>#ifdef</code> can be used as :</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> UNIX</span>
+<span class="hljs-comment">// Code specific for UNIX</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+</div></code></pre>
+<p>The <code>#ifndef</code> is just an opposite of <code>#ifdef</code>.
+We can also use <code>#else</code> and <code>#elif</code> directives.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> WINDOWS</span>
+<span class="hljs-comment">// Code specific for windows</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">elif</span> MAC</span>
+<span class="hljs-comment">// Code specific for macos</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">else</span></span>
+<span class="hljs-comment">// Code Specific for other platforms</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LIMIT 10</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++)
+    {
+        ;
+        <span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> DEBUG</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%dth loop runned\n"</span>,i+<span class="hljs-number">1</span>);
+        <span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Loop Finished...\n"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>Output:</p>
+<pre class="hljs"><code><div>vijaysatheesh@Vijays-MacBook-Air Section 13 % gcc conditcompile.c
+vijaysatheesh@Vijays-MacBook-Air Section 13 % ./a.out 
+Loop Finished...
+vijaysatheesh@Vijays-MacBook-Air Section 13 % gcc conditcompile.c -D DEBUG
+vijaysatheesh@Vijays-MacBook-Air Section 13 % ./a.out                     
+1th loop runned
+2th loop runned
+3th loop runned
+4th loop runned
+5th loop runned
+6th loop runned
+7th loop runned
+8th loop runned
+9th loop runned
+10th loop runned
+Loop Finished...
+</div></code></pre>
+<h4 id="include-guards-and-undef">Include guards and <code>#undef</code></h4>
+<p>The <code>#ifndef</code> is commonly used to prevent multiple inclussions.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> _STDIO_H</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> _STDIO_H</span>
+<span class="hljs-comment">// include statements </span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+</div></code></pre>
+<p>Now we cannot include the same headerfile again.</p>
+<h4 id="undef"><code>#undef</code></h4>
+<p>This preprocessor directive is used to undefine a previously defined identifier.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SPEED</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> WINDOWS</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">undef</span> SPEED <span class="hljs-comment">// JK :-P</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+</div></code></pre>
+<h3 id="pragma"><code>#pragma</code></h3>
+<p>The <code>#pragma</code> direcive allows us to place compiler instructions in sourcecode. Usefull when the program is large and we have to use the most capablities of the compiler.
+It can be used to:</p>
+<ul>
+<li>Control the memory kept for automatic variables</li>
+<li>Set the strictness of error checking</li>
+<li>Enable nonstandard language features</li>
+</ul>
+<p>Generally each compiler have their own pragmas.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> token_name</span>
+</div></code></pre>
+<p>We have to look at the compiler documentation for available pragmas. Some example for GCC are:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC dependancy</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC poison</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC system_header</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> once </span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC <span class="hljs-meta-keyword">warning</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC <span class="hljs-meta-keyword">error</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> message</span>
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC dependancy <span class="hljs-meta-string">"hello.c"</span></span>
+<span class="hljs-comment">// Warning issued if the hello.c file is recent than the current compiling file.</span>
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC poison puts gets</span>
+<span class="hljs-comment">// Removes an identifier completely from the program. Error will be displayed if appears.</span>
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC system_header </span>
+<span class="hljs-comment">// Considers the rest of the header files as system headers and GCC avoids warning of system headers.</span>
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC once</span>
+<span class="hljs-comment">// Ensures the include specifed included only once even if it included multiple times by the programmer. Less portable version of include guards.</span>
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC message <span class="hljs-meta-string">"This will be printed"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC <span class="hljs-meta-keyword">warning</span> <span class="hljs-meta-string">"I will kill you"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC <span class="hljs-meta-keyword">error</span> <span class="hljs-meta-string">"Just kidding no error"</span></span>
+<span class="hljs-comment">// Generates custom warnings errors and compiler messages. </span>
+</div></code></pre>
+<h3 id="error"><code>#error</code></h3>
+<p>Issues an error by the preprocessor. Portable because it is independent of the compiler. Even vscode shows warning🤣</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">error</span> You Are Done Go To Hell</span>
+</div></code></pre>
+<p>Also we can use :</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">warning</span> Behave yourself</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">line</span> 69 yourlife.c</span>
+</div></code></pre>
+<h3 id="what-you-know">What you know</h3>
+<p>The C preprocessor is the first step of the compiliation process</p>
+<p>The C preprocessor may have compiler specific features</p>
+<p>Every preprocessor directive must begin with a  __________.</p>
+<p>Only __________ characters may appear before a preprocessor directive on a line.</p>
+<p>__________ allows a programmer to produce different executables (code) for different platforms.</p>
+<p>Which of the following are C preprocessors directives that allow for Conditional Compiliation?</p>
+<p>This preprocessor directive is used to remove the definition of an identifier which was previously defined with #define?</p>
+<p>Write some code that will print out your name if the  identifier MY_NAME is defined</p>
+<p>The __________ and __________ directives allow a program to extend the #if and #ifdef/#ifndef directives to test for multiple cases</p>
+<p>What will be the output of the following C program?#include &lt;stdio.h&gt; #define SWAP int main() { int x = 3, y = 5; #ifdef SWAP x = 5; y = 3; #endif printf(&quot;%d, %d&quot;, x, y); }</p>
+<p>What will be the output of the following program?#include&lt;stdio.h&gt; #define TEXT void main() { #ifndef TEXT printf(&quot;hello&quot;); #else printf(&quot;hi&quot;); #endif }</p>
+<p>This preprocessor directive is used to give additional information to the compiler, beyond which is provided in the language</p>
+<p>This pragma is used to remove an identifier completely from a program.</p>
+<p>The purpose of using the preprocessor directive #error is that ____________</p>
+<h3 id="what-you-should-review">What you should review</h3>
+<p>What is a preprocessor?</p>
+<p>This preprocessor directive checks whether a constant expression results in a zero or non-zero value.</p>
 
 </body>
 </html>

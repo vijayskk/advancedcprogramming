@@ -1502,8 +1502,7 @@ union myunion{
     float b;
 }mystruct;
 ```
-![EXAMPLE](images/union.png)
-![TABLE](images/union2.png)
+
 ### Defining a union
 Defenition is similiar to the struct. use the ```union``` keyword instead.
 ```c
@@ -1583,5 +1582,206 @@ What will be the output of the following code?union p { int x; char y; }; int ma
 ### What you should review
 
 How can you access the first character of the string sval?struct { char *name; union { char *sval; } u; } tab[10];
+
+# Section 13
+## Preprocessors
+The process of creating a c program involves: 
+- Preprocessing 
+- Compilation
+- Assembling
+- linking
+- loading
+
+The preprocessor is evoked before the compiling. It is basically a text substitution tool.
+Preprocessor will do three steps
+1. Removes all comments: It is just for engineers understanding not needed for the execution.
+2. Includes all the files from various libraries that is needed to compile. We have to specify them using the ```#include``` directive.
+3. Expansion of macro defenitions.
+
+Commands used by preprocesors are called preprocessor directives. It should be the first nonblank charecter and should begin in the first column
+
+```c
+#include <stdio.h>
+#define MAXLENGTH 10
+```
+### Conditional Compilation 
+Often used to compile a single program according to the host machine. Usefull when we have a larger software with more dependancies. Can also be used to switch certain statements like debugging on or off.
+
+Each if the conditional preprocessor directives checks a constat integer expression;
+#### ```#ifdef``` 
+Checks whether the identifier is defined or not. To set an identifier:
+
+```#define UNIX 1``` or ```#define UNIX```
+
+Or we can also use commandline arguments to define an identifier
+```bash
+gcc hello.c -D UNIX
+```
+
+The ```#ifdef``` can be used as :
+
+```c
+#ifdef UNIX
+// Code specific for UNIX
+#endif
+```
+The ```#ifndef``` is just an opposite of ```#ifdef```.
+We can also use ```#else``` and ```#elif``` directives.
+```c
+#ifdef WINDOWS
+// Code specific for windows
+#elif MAC
+// Code specific for macos
+#else
+// Code Specific for other platforms
+#endif
+```
+
+Example:
+```c
+#define LIMIT 10
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    for (int i = 0; i < 10; i++)
+    {
+        ;
+        #ifdef DEBUG
+        printf("%dth loop runned\n",i+1);
+        #endif
+    }
+    printf("Loop Finished...\n");
+    return 0;
+}
+```
+Output:
+```bash
+vijaysatheesh@Vijays-MacBook-Air Section 13 % gcc conditcompile.c
+vijaysatheesh@Vijays-MacBook-Air Section 13 % ./a.out 
+Loop Finished...
+vijaysatheesh@Vijays-MacBook-Air Section 13 % gcc conditcompile.c -D DEBUG
+vijaysatheesh@Vijays-MacBook-Air Section 13 % ./a.out                     
+1th loop runned
+2th loop runned
+3th loop runned
+4th loop runned
+5th loop runned
+6th loop runned
+7th loop runned
+8th loop runned
+9th loop runned
+10th loop runned
+Loop Finished...
+```
+#### Include guards and ```#undef```
+The ```#ifndef``` is commonly used to prevent multiple inclussions.
+
+```c
+#ifndef _STDIO_H
+#define _STDIO_H
+// include statements 
+#endif
+```
+Now we cannot include the same headerfile again.
+
+#### ```#undef```
+
+This preprocessor directive is used to undefine a previously defined identifier.
+```c
+#define SPEED
+
+#ifdef WINDOWS
+#undef SPEED // JK :-P
+#endif
+```
+### ```#pragma``` 
+The ```#pragma``` direcive allows us to place compiler instructions in sourcecode. Usefull when the program is large and we have to use the most capablities of the compiler.
+It can be used to:
+- Control the memory kept for automatic variables
+- Set the strictness of error checking
+- Enable nonstandard language features
+
+Generally each compiler have their own pragmas.
+```c
+#pragma token_name
+```
+We have to look at the compiler documentation for available pragmas. Some example for GCC are:
+```c
+#pragma GCC dependancy
+#pragma GCC poison
+#pragma GCC system_header
+#pragma once 
+#pragma GCC warning
+#pragma GCC error
+#pragma message
+```
+```c
+#pragma GCC dependancy "hello.c"
+// Warning issued if the hello.c file is recent than the current compiling file.
+```
+```c
+#pragma GCC poison puts gets
+// Removes an identifier completely from the program. Error will be displayed if appears.
+```
+```c
+#pragma GCC system_header 
+// Considers the rest of the header files as system headers and GCC avoids warning of system headers.
+```
+```c
+#pragma GCC once
+// Ensures the include specifed included only once even if it included multiple times by the programmer. Less portable version of include guards.
+```
+```c
+#pragma GCC message "This will be printed"
+#pragma GCC warning "I will kill you"
+#pragma GCC error "Just kidding no error"
+// Generates custom warnings errors and compiler messages. 
+```
+### ```#error```
+Issues an error by the preprocessor. Portable because it is independent of the compiler. Even vscode shows warning🤣
+```c
+#error You Are Done Go To Hell
+```
+Also we can use :
+```c
+#warning Behave yourself
+#line 69 yourlife.c
+```
+
+### What you know
+
+The C preprocessor is the first step of the compiliation process
+
+The C preprocessor may have compiler specific features
+
+Every preprocessor directive must begin with a  __________.
+
+Only __________ characters may appear before a preprocessor directive on a line.
+
+__________ allows a programmer to produce different executables (code) for different platforms.
+
+Which of the following are C preprocessors directives that allow for Conditional Compiliation?
+
+This preprocessor directive is used to remove the definition of an identifier which was previously defined with #define?
+
+Write some code that will print out your name if the  identifier MY_NAME is defined
+
+The __________ and __________ directives allow a program to extend the #if and #ifdef/#ifndef directives to test for multiple cases
+
+What will be the output of the following C program?#include <stdio.h> #define SWAP int main() { int x = 3, y = 5; #ifdef SWAP x = 5; y = 3; #endif printf("%d, %d", x, y); }
+
+What will be the output of the following program?#include<stdio.h> #define TEXT void main() { #ifndef TEXT printf("hello"); #else printf("hi"); #endif }
+
+This preprocessor directive is used to give additional information to the compiler, beyond which is provided in the language
+
+This pragma is used to remove an identifier completely from a program.
+
+The purpose of using the preprocessor directive #error is that ____________
+### What you should review
+
+What is a preprocessor?
+
+This preprocessor directive checks whether a constant expression results in a zero or non-zero value.
 
 
