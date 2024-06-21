@@ -5,6 +5,228 @@
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 
 <style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
 /* Tomorrow Theme */
 /* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
 /* Original theme - https://github.com/chriskempson/tomorrow-theme */
@@ -78,6 +300,58 @@
 .hljs-strong {
 	font-weight: bold;
 }
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
 </style>
 
 <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
@@ -1474,6 +1748,127 @@ It is just a suggestion not a guarantee to make it fast. It can make the code mo
 <p>The purpose of the _Noreturn specifier is to inform the compiler that a particular function will not return control to the calling program when it completes execution.  The compiler will then use this information to always optimize your code.  (T/F)</p>
 <h3 id="what-you-should-review">What you should review</h3>
 <p>In the absence of an exit condition in a recursive function, the following error occurs.</p>
+<h1 id="section-12">Section 12</h1>
+<h2 id="unions">Unions</h2>
+<p>Union is a derrived type (like struct) with members that store same storage space. Sometimes same type of construct need different type of data.</p>
+<ul>
+<li>Can be used to save space and for alternating data.</li>
+<li>A union doesn't waste storage on variables that are not being used.</li>
+</ul>
+<p>Each element in a union is called a member similiar to struct. Only one member can have a value at a given time. So only one member can be accessed at a time.</p>
+<p>The members of union can be any type. In most cases union will contain two or more datatypes. It is our responsiblity to ensure that the data is referenced with proper datatype.</p>
+<p>Operations on a union are:</p>
+<ul>
+<li>Assigning of a union to another with the same type.</li>
+<li>taking the address (&amp;) of a union varable.</li>
+<li>Accessing union members.</li>
+</ul>
+<h3 id="use-cases">Use cases</h3>
+<ul>
+<li>Usefull in embeded programming with a low memory requierment because unions save memory.</li>
+<li>For representing a table with mixed dayatypes.</li>
+<li>Creating muli datatype arrays.</li>
+<li>Representing files with different record types.</li>
+<li>Representing a network interface containing different requests.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Struct</th>
+<th>Union</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Allocates space for all it's members seperately</td>
+<td>one common memory space for all members</td>
+</tr>
+<tr>
+<td>Memory space calculated for each member</td>
+<td>Memory space calculated for the largest member. Programmers can decide what to put there</td>
+</tr>
+</tbody>
+</table>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mystruct</span>{</span>
+    <span class="hljs-keyword">char</span> a;
+    <span class="hljs-keyword">float</span> b;
+}mystruct;
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-keyword">union</span> myunion{
+    <span class="hljs-keyword">char</span> a;
+    <span class="hljs-keyword">float</span> b;
+}mystruct;
+</div></code></pre>
+<p><img src="images/union.png" alt="EXAMPLE">
+<img src="images/union2.png" alt="TABLE"></p>
+<h3 id="defining-a-union">Defining a union</h3>
+<p>Defenition is similiar to the struct. use the <code>union</code> keyword instead.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">union</span> data{
+    <span class="hljs-keyword">int</span> a;
+    <span class="hljs-keyword">float</span> b;
+    <span class="hljs-keyword">char</span> c[<span class="hljs-number">20</span>];
+}
+</div></code></pre>
+<p>This will take 20 bytes of memory because of <code>c</code> is the highest datatype. Structures can be defined containing unions.</p>
+<p>Unions can also be defined as arrays and can store as much as union elements we want in an array.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-keyword">union</span> Data
+{
+    <span class="hljs-keyword">int</span> a;
+    <span class="hljs-keyword">float</span> b;
+    <span class="hljs-keyword">char</span> c[<span class="hljs-number">20</span>];
+};
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Person</span>
+{</span>
+    <span class="hljs-keyword">char</span> name[<span class="hljs-number">30</span>];
+    <span class="hljs-keyword">int</span> age;
+    <span class="hljs-keyword">union</span> Data data;
+    <span class="hljs-keyword">union</span>
+    {
+        <span class="hljs-keyword">int</span> isDead;
+        <span class="hljs-keyword">char</span> occupation[<span class="hljs-number">20</span>];
+    };
+};
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span>
+{</span>
+    <span class="hljs-keyword">char</span> *name;
+    <span class="hljs-keyword">enum</span> symbolType;
+    <span class="hljs-keyword">union</span>
+    {
+        <span class="hljs-keyword">int</span> i;
+        <span class="hljs-keyword">float</span> f;
+        <span class="hljs-keyword">char</span> c;
+    } data;
+} table[<span class="hljs-number">10</span>];
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">union</span> Data data1, data2, *data3;
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Person</span> <span class="hljs-title">p1</span>;</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%ld\n"</span>, <span class="hljs-keyword">sizeof</span>(data1)); <span class="hljs-comment">// OUT: 20</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%ld\n"</span>, <span class="hljs-keyword">sizeof</span>(p1));    <span class="hljs-comment">// OUT: 20</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="accessing-union-members">Accessing union members.</h3>
+<p>Accessing and assigning is also similiar to the struct.</p>
+<ul>
+<li>dot (.) operator to access the members.</li>
+<li><code>-&gt;</code> operator to access the pointer type variables.</li>
+</ul>
+<p>Eg: <code>name.member</code></p>
+<h3 id="what-you-know">What you know</h3>
+<p>A union will allocate storage space for all its members separately (T/F)</p>
+<p>Which of the following share a similarity in syntax to a Union?1. Object, 2. Structure, 3. Arrays, 4. Pointers</p>
+<p>What will be the output of the following code?union myUnion { int ival; float fval; }; void main() { union myUnion r; r.fval = 5.2; printf(&quot;%f&quot;, r.fval); }</p>
+<p>The size of a union is determined by the size of the __________</p>
+<p>What would be the size of the following union declaration?(Assuming size of double = 8, size of int = 4, size of char = 1)?union uTemp { double a; int b[10]; char c; } u;</p>
+<p>Members of a union are accessed as________________</p>
+<p>What will be the output of the following code?union p { int x; char y; }; int main() { union p a, b; a.y = 60; b.x = 12; printf(&quot;%d\n&quot;, a.y); }</p>
+<h3 id="what-you-should-review">What you should review</h3>
+<p>How can you access the first character of the string sval?struct { char *name; union { char *sval; } u; } tab[10];</p>
 
 </body>
 </html>
