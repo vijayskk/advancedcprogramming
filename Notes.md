@@ -1784,4 +1784,69 @@ What is a preprocessor?
 
 This preprocessor directive checks whether a constant expression results in a zero or non-zero value.
 
+# Section 14
+## Macros
 
+Macro is a code piece based of the #define statement. Macros are a text processing feature and are expanded and replced by macro defenitions. Little outdated nowadays but still makes programmers day better.
+```c
+#define MACRO macro_body
+```
+It simply replaces the occurance of ```MACRO``` with ```macro_body```.
+Eg:
+```c
+#include <stdio.h>
+
+#define PRINT_HI printf("Hi...");
+
+int main(int argc, char const *argv[])
+{
+    PRINT_HI
+    return 0;
+}
+``` 
+Some things to remember:
+- There can't be space in macro name but can have space in macro body.
+- Macros are not terminated by semicolon.
+- They run until the first newline following the ```#```
+- Limited to one line in length but can use ```\``` operator for continuation.
+
+| Macros | Functions |
+| --- | --- |
+| All macros are preprocessed means all will be processed before the program compiles. | Functions are compiled not preprocessed. |
+| Macro is faster because it is executed as inline code. | Function is slower because the program control must shift to where the function defined. |
+| Macros dont have to allocate a seperate data or stackframe it is just a text substitution. | Function have to make room for arguments and other variables. | 
+| A macro produces inline code so the filesize of the program increases. | Function only defined once so no such overhead. | 
+| Macros don't have to worry about variable types. Just substitute the values | Have to deal with variable types |  
+| Same macro can be used with any datatype and it won't give errors of type checking | Functions do type checking |
+
+
+Some compiler will limit the macros to single line. So we have to observe that even if our compiler doesn't. Inline functions are an alternative to macro but it have it's own place.
+
+We can see the preprocessed code by the command:
+```bash
+gcc -E file.c
+```
+### Preprocessor Operators
+The preprocessor includes some operators for making the macros easy. They are :
+- ```\``` operator : This will allow the continuation of a macro to the next line. A macro is always a single logic line so ```\``` will be usefull.
+- ```defined()``` operator is used when we have to know whether an identifier is defined using ```#define``` or not.
+- ```#``` and ```##``` operators are used to merge two tokens into one while expanding macros. 
+- ```#``` operator causes the replacement text to be substituted as a string surrounded by quotes. 
+- ```##``` operator is used to join two tokens together.
+```c
+#define TOKENCONCAT(a,b) a ## b
+int main(){
+    printf("TOKENCONCAT(O,K)");
+}
+```
+### Predefined Macros
+C provide some symbolic constants as macros.
+- ```__FILE__``` gives the current filename working with.
+- ```__LINE__``` gives the current line.
+- ```__func__``` gives the current function name (not standard).
+- ```__DATE__``` gives the compiled date in MMM DD YYYY format.
+- ```__TIME__``` gives the compiled time in hh:mm:ss format.
+- ```__STDC__``` will return the value 1 if compiler support standard C.
+
+
+These macros cannot be placed inside a preprocessor directive.It should begin and end with the two underscores.

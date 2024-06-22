@@ -2026,6 +2026,93 @@ It can be used to:</p>
 <h3 id="what-you-should-review">What you should review</h3>
 <p>What is a preprocessor?</p>
 <p>This preprocessor directive checks whether a constant expression results in a zero or non-zero value.</p>
+<h1 id="section-14">Section 14</h1>
+<h2 id="macros">Macros</h2>
+<p>Macro is a code piece based of the #define statement. Macros are a text processing feature and are expanded and replced by macro defenitions. Little outdated nowadays but still makes programmers day better.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MACRO macro_body</span>
+</div></code></pre>
+<p>It simply replaces the occurance of <code>MACRO</code> with <code>macro_body</code>.
+Eg:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PRINT_HI printf(<span class="hljs-meta-string">"Hi..."</span>);</span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    PRINT_HI
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>Some things to remember:</p>
+<ul>
+<li>There can't be space in macro name but can have space in macro body.</li>
+<li>Macros are not terminated by semicolon.</li>
+<li>They run until the first newline following the <code>#</code></li>
+<li>Limited to one line in length but can use <code>\</code> operator for continuation.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Macros</th>
+<th>Functions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All macros are preprocessed means all will be processed before the program compiles.</td>
+<td>Functions are compiled not preprocessed.</td>
+</tr>
+<tr>
+<td>Macro is faster because it is executed as inline code.</td>
+<td>Function is slower because the program control must shift to where the function defined.</td>
+</tr>
+<tr>
+<td>Macros dont have to allocate a seperate data or stackframe it is just a text substitution.</td>
+<td>Function have to make room for arguments and other variables.</td>
+</tr>
+<tr>
+<td>A macro produces inline code so the filesize of the program increases.</td>
+<td>Function only defined once so no such overhead.</td>
+</tr>
+<tr>
+<td>Macros don't have to worry about variable types. Just substitute the values</td>
+<td>Have to deal with variable types</td>
+</tr>
+<tr>
+<td>Same macro can be used with any datatype and it won't give errors of type checking</td>
+<td>Functions do type checking</td>
+</tr>
+</tbody>
+</table>
+<p>Some compiler will limit the macros to single line. So we have to observe that even if our compiler doesn't. Inline functions are an alternative to macro but it have it's own place.</p>
+<p>We can see the preprocessed code by the command:</p>
+<pre class="hljs"><code><div>gcc -E file.c
+</div></code></pre>
+<h3 id="preprocessor-operators">Preprocessor Operators</h3>
+<p>The preprocessor includes some operators for making the macros easy. They are :</p>
+<ul>
+<li><code>\</code> operator : This will allow the continuation of a macro to the next line. A macro is always a single logic line so <code>\</code> will be usefull.</li>
+<li><code>defined()</code> operator is used when we have to know whether an identifier is defined using <code>#define</code> or not.</li>
+<li><code>#</code> and <code>##</code> operators are used to merge two tokens into one while expanding macros.</li>
+<li><code>#</code> operator causes the replacement text to be substituted as a string surrounded by quotes.</li>
+<li><code>##</code> operator is used to join two tokens together.</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TOKENCONCAT(a,b) a ## b</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"TOKENCONCAT(O,K)"</span>);
+}
+</div></code></pre>
+<h3 id="predefined-macros">Predefined Macros</h3>
+<p>C provide some symbolic constants as macros.</p>
+<ul>
+<li><code>__FILE__</code> gives the current filename working with.</li>
+<li><code>__LINE__</code> gives the current line.</li>
+<li><code>__func__</code> gives the current function name (not standard).</li>
+<li><code>__DATE__</code> gives the compiled date in MMM DD YYYY format.</li>
+<li><code>__TIME__</code> gives the compiled time in hh:mm:ss format.</li>
+<li><code>__STDC__</code> will return the value 1 if compiler support standard C.</li>
+</ul>
+<p>These macros cannot be placed inside a preprocessor directive.It should begin and end with the two underscores.</p>
 
 </body>
 </html>
