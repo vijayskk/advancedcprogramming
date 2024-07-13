@@ -1850,3 +1850,181 @@ C provide some symbolic constants as macros.
 
 
 These macros cannot be placed inside a preprocessor directive.It should begin and end with the two underscores.
+
+# Section 15 
+## Advanced debugging,analysys and compiler options
+### GCC compiler options
+There are various compiler options to control the execution process of a c program.
+For example there are options to stop at a particular process. Some options stop at preprocessing some at compiling and some do liniking and loading.
+| Option | Purpous |
+|:---:|:---:|
+| ```-c``` | Do the compiling only and generate an object file.|
+| ```-Wall``` | Enables all warnings. |
+| ```-E``` | Dumps the preprocessed code. | 
+| ```-S``` | Generates assembly code. | 
+| ```-save-temps``` | Saves all the files from all steps. |
+| ```-l``` | For linking shared libraries ( Eg: ```-l m``` for math library )|
+| ```-g``` | For storing debug info in the object file |
+| ```-v``` | Enable verbous |
+| ```-ansi``` | Follow the ANSI standard |
+| ```-fsigned-char``` | Treat charecters as signed |
+| ```-funsigned-char``` | Treat charecters as unsigned |
+| ```-D``` | Defining macros | 
+| ```-Werror``` | Convert all warnings to errors |
+
+We can also include an optfile containing all the options and use with the @ symbol.
+```bash
+gcc hello.c @optfilename
+```
+### Optimization flags
+We can find out optimizers for a compiler using help. As in GCC we can give the command to get help:
+```bash
+GCC -Q --help=optimizers
+```
+### Debugging with the preprocessor
+We can use the conditional compiling directives to turn on or off debugging statements. 
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char const *argv[])
+{
+    char name[30];
+    scanf("%s",name);
+    for (int i = 0; i < strlen(name); i++)
+    {
+        #ifdef DEBUG
+        printf("%c -> %c\n",name[i],name[i] + 1);
+        #endif
+        name[i] += 1;
+    }
+    printf("%s\n",name);
+    return 0;
+}
+```
+We can also use a macro to do the same.
+```c
+#define DEBUGME(fmt,...) fprintf(stderr,fmt,__VA_ARGS__)
+```
+Now we can also wrap in this a ifdef so that we just have to call the debug statements.
+```c
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#ifdef DEBON
+#warning DEBUGGER IS ON 
+#define DEBUGME(fmt,...) fprintf(stderr,fmt,__VA_ARGS__)
+#else
+#define DEBUGME(fmt,...)
+#endif
+
+int main(int argc, char const *argv[])
+{
+    char name[30];
+    scanf("%s",name);
+    for (int i = 0; i < strlen(name); i++)
+    {
+        DEBUGME("%c -> %c\n",name[i],name[i] + 1);
+        name[i] += 1;
+    }
+    printf("%s\n",name);
+    return 0;
+}
+```
+### Debugging with LLDB
+LLDB ( low-level debugger ) is a command line tool used for debugging. It allows us to see inside of a program and what crashes the program. The LLDB alternatives for GDB commands are:
+
+Switching from GDB to LLDB can be straightforward since many commands are quite similar. Here's a list of useful LLDB commands along with their GDB counterparts to help you transition:
+
+#### Basic Commands
+
+| Task                         | GDB Command                  | LLDB Command                 |
+|------------------------------|------------------------------|------------------------------|
+| Start debugging              | `gdb ./a.out`                | `lldb ./a.out`               |
+| Run the program              | `run`                        | `run`                        |
+| Set a breakpoint by function | `break my_function`          | `breakpoint set --name my_function` |
+| Set a breakpoint by file/line| `break file.c:10`            | `breakpoint set --file file.c --line 10` |
+| List breakpoints             | `info breakpoints`           | `breakpoint list`            |
+| Delete a breakpoint          | `delete breakpoint 1`        | `breakpoint delete 1`        |
+| Continue execution           | `continue`                   | `continue`                   |
+| Step into a function         | `step`                       | `step`                       |
+| Step over a function         | `next`                       | `next`                       |
+| Step out of a function       | `finish`                     | `finish`                     |
+| Print a variable             | `print var`                  | `print var`                  |
+| Print call stack             | `backtrace`                  | `bt`                         |
+| List source code             | `list`                       | `list`                       |
+| Display local variables      | `info locals`                | `frame variable`             |
+| Quit debugger                | `quit`                       | `quit`                       |
+
+#### Advanced Commands
+
+| Task                         | GDB Command                  | LLDB Command                 |
+|------------------------------|------------------------------|------------------------------|
+| Watch a variable             | `watch var`                  | `watchpoint set variable var` |
+| Examine memory               | `x`                          | `memory read`                |
+| Change variable value        | `set var x = 5`              | `expr x = 5`                 |
+| Conditional breakpoint       | `break if i == 3`            | `breakpoint set --name my_function --condition "i == 3"` |
+| Enable breakpoint            | `enable break 1`             | `breakpoint enable 1`        |
+| Disable breakpoint           | `disable break 1`            | `breakpoint disable 1`       |
+| Command history              | `show commands`              | `command history`            |
+| Attach to a process          | `attach pid 1234`            | `process attach --pid 1234`  |
+| Detach from process          | `detach`                     | `process detach`             |
+| Set environment variable     | `set environment VAR=VAL`    | `settings set target.env-vars VAR=VAL` |
+| Redirect I/O                 | `run < input > output`       | `run < input > output`       |
+| Call a function              | `call func()`                | `expr func()`                |
+
+
+First we have to enable the debugging information in our code. Use the -g flag for that.
+```bash
+gcc -g filename.c
+```
+Next we can look into the executable using GDB
+```bash
+lldb a.out
+```
+This will open up a gdb prompt like this:
+```bash
+(lldb) target create "a.out"
+Current executable set to '/Users/vijaysatheesh/Advanced C Programming/Section 15/a.out' (arm64).
+(lldb) 
+```
+For running the code under the control of lldb, Use command:
+```bash
+(lldb) run
+```
+This will execute the program normally and it will throw errors if it have. If you want to know the value of a variable at the time of crash, use the command:
+```bash
+print <variable_name>
+```
+This will also work on arrays and structures.
+In order to set a variable, We can use the command:
+```bash
+expr <variable_name> = <value>
+```
+The variable must be in current active function and the process must be running in order to work with variables. To display all the variables just use:
+```bash
+frame variables
+```
+### Core files
+A core dump is generated when a program is crashed or terminated abnormally because of segmentation fault.
+A Segmentation fault is a specific kind of error caused by accessing memory that "do not belongs you". The core file contains the snapshot of the memory at the time of termination. Can be used to analyse the crash and compare to another crashes offsite.
+
+Because of large size the compiler may disable the core dumping. You can enable it by running:
+```bash
+ulimit -c unlimited
+```
+### Profiling
+Profiling is a form of dynamic programming analysis that measures the:
+- Space complexity
+- Time Complexity
+- Usage of particular instructions 
+- The frequency and duration of function calls
+
+This serves data to optimize the program. Achieved by instrumenting the source code by some profiling tools. Profilers will use various techniques like event based,statistical,instrumented,and simulated methods.
+
+### gprof
+gprof (GNU Profiler) is a tool used to profile the executable.It uses a hybrid approach of compiler assisted instrumentation and sampling. The instrumentation is used to gather function call insformation ( call graphs ).
+
+To gather runtime info a sampling process is used.
+The program counter is inturrupted at regular intervals of time. The resultant data is not exact but are statistical approximations.
