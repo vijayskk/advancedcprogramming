@@ -2023,8 +2023,22 @@ Profiling is a form of dynamic programming analysis that measures the:
 
 This serves data to optimize the program. Achieved by instrumenting the source code by some profiling tools. Profilers will use various techniques like event based,statistical,instrumented,and simulated methods.
 
-### gprof
+#### gprof
 gprof (GNU Profiler) is a tool used to profile the executable.It uses a hybrid approach of compiler assisted instrumentation and sampling. The instrumentation is used to gather function call insformation ( call graphs ).
 
 To gather runtime info a sampling process is used.
 The program counter is inturrupted at regular intervals of time. The resultant data is not exact but are statistical approximations.
+
+use ```gcc -pg profiling.c``` to enable analysis and use ```gprof a.out gmon.out``` to get the call graph and analysys report.
+
+#### valgrind
+valgrind is another program to check memory leaks. It is a really slow program but detects the memory leaks.
+```bash
+valgrind --leak-check=yes ./a.out
+```
+### Static analysys
+Static analysys is the method of examining the source code automatically without running it. This makes us an understanding about the code structure and industry standards.
+Eg:
+- Coverity ( by Synopsis )
+- CodeSonar ( by Grammatech )
+    - Used by US food and drugs Administration and NASA
