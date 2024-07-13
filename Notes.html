@@ -2113,6 +2113,349 @@ Eg:</p>
 <li><code>__STDC__</code> will return the value 1 if compiler support standard C.</li>
 </ul>
 <p>These macros cannot be placed inside a preprocessor directive.It should begin and end with the two underscores.</p>
+<h1 id="section-15">Section 15</h1>
+<h2 id="advanced-debugginganalysys-and-compiler-options">Advanced debugging,analysys and compiler options</h2>
+<h3 id="gcc-compiler-options">GCC compiler options</h3>
+<p>There are various compiler options to control the execution process of a c program.
+For example there are options to stop at a particular process. Some options stop at preprocessing some at compiling and some do liniking and loading.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Option</th>
+<th style="text-align:center">Purpous</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-c</code></td>
+<td style="text-align:center">Do the compiling only and generate an object file.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-Wall</code></td>
+<td style="text-align:center">Enables all warnings.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-E</code></td>
+<td style="text-align:center">Dumps the preprocessed code.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-S</code></td>
+<td style="text-align:center">Generates assembly code.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-save-temps</code></td>
+<td style="text-align:center">Saves all the files from all steps.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-l</code></td>
+<td style="text-align:center">For linking shared libraries ( Eg: <code>-l m</code> for math library )</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-g</code></td>
+<td style="text-align:center">For storing debug info in the object file</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-v</code></td>
+<td style="text-align:center">Enable verbous</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-ansi</code></td>
+<td style="text-align:center">Follow the ANSI standard</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-fsigned-char</code></td>
+<td style="text-align:center">Treat charecters as signed</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-funsigned-char</code></td>
+<td style="text-align:center">Treat charecters as unsigned</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-D</code></td>
+<td style="text-align:center">Defining macros</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-Werror</code></td>
+<td style="text-align:center">Convert all warnings to errors</td>
+</tr>
+</tbody>
+</table>
+<p>We can also include an optfile containing all the options and use with the @ symbol.</p>
+<pre class="hljs"><code><div>gcc hello.c @optfilename
+</div></code></pre>
+<h3 id="optimization-flags">Optimization flags</h3>
+<p>We can find out optimizers for a compiler using help. As in GCC we can give the command to get help:</p>
+<pre class="hljs"><code><div>GCC -Q --<span class="hljs-built_in">help</span>=optimizers
+</div></code></pre>
+<h3 id="debugging-with-the-preprocessor">Debugging with the preprocessor</h3>
+<p>We can use the conditional compiling directives to turn on or off debugging statements.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">char</span> name[<span class="hljs-number">30</span>];
+    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%s"</span>,name);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">strlen</span>(name); i++)
+    {
+        <span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> DEBUG</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%c -&gt; %c\n"</span>,name[i],name[i] + <span class="hljs-number">1</span>);
+        <span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+        name[i] += <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s\n"</span>,name);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>We can also use a macro to do the same.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> DEBUGME(fmt,...) fprintf(stderr,fmt,__VA_ARGS__)</span>
+</div></code></pre>
+<p>Now we can also wrap in this a ifdef so that we just have to call the debug statements.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> DEBON</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">warning</span> DEBUGGER IS ON </span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> DEBUGME(fmt,...) fprintf(stderr,fmt,__VA_ARGS__)</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">else</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> DEBUGME(fmt,...)</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">char</span> name[<span class="hljs-number">30</span>];
+    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%s"</span>,name);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">strlen</span>(name); i++)
+    {
+        DEBUGME(<span class="hljs-string">"%c -&gt; %c\n"</span>,name[i],name[i] + <span class="hljs-number">1</span>);
+        name[i] += <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s\n"</span>,name);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="debugging-with-lldb">Debugging with LLDB</h3>
+<p>LLDB ( low-level debugger ) is a command line tool used for debugging. It allows us to see inside of a program and what crashes the program. The LLDB alternatives for GDB commands are:</p>
+<p>Switching from GDB to LLDB can be straightforward since many commands are quite similar. Here's a list of useful LLDB commands along with their GDB counterparts to help you transition:</p>
+<h4 id="basic-commands">Basic Commands</h4>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>GDB Command</th>
+<th>LLDB Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Start debugging</td>
+<td><code>gdb ./a.out</code></td>
+<td><code>lldb ./a.out</code></td>
+</tr>
+<tr>
+<td>Run the program</td>
+<td><code>run</code></td>
+<td><code>run</code></td>
+</tr>
+<tr>
+<td>Set a breakpoint by function</td>
+<td><code>break my_function</code></td>
+<td><code>breakpoint set --name my_function</code></td>
+</tr>
+<tr>
+<td>Set a breakpoint by file/line</td>
+<td><code>break file.c:10</code></td>
+<td><code>breakpoint set --file file.c --line 10</code></td>
+</tr>
+<tr>
+<td>List breakpoints</td>
+<td><code>info breakpoints</code></td>
+<td><code>breakpoint list</code></td>
+</tr>
+<tr>
+<td>Delete a breakpoint</td>
+<td><code>delete breakpoint 1</code></td>
+<td><code>breakpoint delete 1</code></td>
+</tr>
+<tr>
+<td>Continue execution</td>
+<td><code>continue</code></td>
+<td><code>continue</code></td>
+</tr>
+<tr>
+<td>Step into a function</td>
+<td><code>step</code></td>
+<td><code>step</code></td>
+</tr>
+<tr>
+<td>Step over a function</td>
+<td><code>next</code></td>
+<td><code>next</code></td>
+</tr>
+<tr>
+<td>Step out of a function</td>
+<td><code>finish</code></td>
+<td><code>finish</code></td>
+</tr>
+<tr>
+<td>Print a variable</td>
+<td><code>print var</code></td>
+<td><code>print var</code></td>
+</tr>
+<tr>
+<td>Print call stack</td>
+<td><code>backtrace</code></td>
+<td><code>bt</code></td>
+</tr>
+<tr>
+<td>List source code</td>
+<td><code>list</code></td>
+<td><code>list</code></td>
+</tr>
+<tr>
+<td>Display local variables</td>
+<td><code>info locals</code></td>
+<td><code>frame variable</code></td>
+</tr>
+<tr>
+<td>Quit debugger</td>
+<td><code>quit</code></td>
+<td><code>quit</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="advanced-commands">Advanced Commands</h4>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>GDB Command</th>
+<th>LLDB Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Watch a variable</td>
+<td><code>watch var</code></td>
+<td><code>watchpoint set variable var</code></td>
+</tr>
+<tr>
+<td>Examine memory</td>
+<td><code>x</code></td>
+<td><code>memory read</code></td>
+</tr>
+<tr>
+<td>Change variable value</td>
+<td><code>set var x = 5</code></td>
+<td><code>expr x = 5</code></td>
+</tr>
+<tr>
+<td>Conditional breakpoint</td>
+<td><code>break if i == 3</code></td>
+<td><code>breakpoint set --name my_function --condition &quot;i == 3&quot;</code></td>
+</tr>
+<tr>
+<td>Enable breakpoint</td>
+<td><code>enable break 1</code></td>
+<td><code>breakpoint enable 1</code></td>
+</tr>
+<tr>
+<td>Disable breakpoint</td>
+<td><code>disable break 1</code></td>
+<td><code>breakpoint disable 1</code></td>
+</tr>
+<tr>
+<td>Command history</td>
+<td><code>show commands</code></td>
+<td><code>command history</code></td>
+</tr>
+<tr>
+<td>Attach to a process</td>
+<td><code>attach pid 1234</code></td>
+<td><code>process attach --pid 1234</code></td>
+</tr>
+<tr>
+<td>Detach from process</td>
+<td><code>detach</code></td>
+<td><code>process detach</code></td>
+</tr>
+<tr>
+<td>Set environment variable</td>
+<td><code>set environment VAR=VAL</code></td>
+<td><code>settings set target.env-vars VAR=VAL</code></td>
+</tr>
+<tr>
+<td>Redirect I/O</td>
+<td><code>run &lt; input &gt; output</code></td>
+<td><code>run &lt; input &gt; output</code></td>
+</tr>
+<tr>
+<td>Call a function</td>
+<td><code>call func()</code></td>
+<td><code>expr func()</code></td>
+</tr>
+</tbody>
+</table>
+<p>First we have to enable the debugging information in our code. Use the -g flag for that.</p>
+<pre class="hljs"><code><div>gcc -g filename.c
+</div></code></pre>
+<p>Next we can look into the executable using GDB</p>
+<pre class="hljs"><code><div>lldb a.out
+</div></code></pre>
+<p>This will open up a gdb prompt like this:</p>
+<pre class="hljs"><code><div>(lldb) target create <span class="hljs-string">"a.out"</span>
+Current executable <span class="hljs-built_in">set</span> to <span class="hljs-string">'/Users/vijaysatheesh/Advanced C Programming/Section 15/a.out'</span> (arm64).
+(lldb) 
+</div></code></pre>
+<p>For running the code under the control of lldb, Use command:</p>
+<pre class="hljs"><code><div>(lldb) run
+</div></code></pre>
+<p>This will execute the program normally and it will throw errors if it have. If you want to know the value of a variable at the time of crash, use the command:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">print</span> &lt;variable_name&gt;
+</div></code></pre>
+<p>This will also work on arrays and structures.
+In order to set a variable, We can use the command:</p>
+<pre class="hljs"><code><div>expr &lt;variable_name&gt; = &lt;value&gt;
+</div></code></pre>
+<p>The variable must be in current active function and the process must be running in order to work with variables. To display all the variables just use:</p>
+<pre class="hljs"><code><div>frame variables
+</div></code></pre>
+<h3 id="core-files">Core files</h3>
+<p>A core dump is generated when a program is crashed or terminated abnormally because of segmentation fault.
+A Segmentation fault is a specific kind of error caused by accessing memory that &quot;do not belongs you&quot;. The core file contains the snapshot of the memory at the time of termination. Can be used to analyse the crash and compare to another crashes offsite.</p>
+<p>Because of large size the compiler may disable the core dumping. You can enable it by running:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">ulimit</span> -c unlimited
+</div></code></pre>
+<h3 id="profiling">Profiling</h3>
+<p>Profiling is a form of dynamic programming analysis that measures the:</p>
+<ul>
+<li>Space complexity</li>
+<li>Time Complexity</li>
+<li>Usage of particular instructions</li>
+<li>The frequency and duration of function calls</li>
+</ul>
+<p>This serves data to optimize the program. Achieved by instrumenting the source code by some profiling tools. Profilers will use various techniques like event based,statistical,instrumented,and simulated methods.</p>
+<h4 id="gprof">gprof</h4>
+<p>gprof (GNU Profiler) is a tool used to profile the executable.It uses a hybrid approach of compiler assisted instrumentation and sampling. The instrumentation is used to gather function call insformation ( call graphs ).</p>
+<p>To gather runtime info a sampling process is used.
+The program counter is inturrupted at regular intervals of time. The resultant data is not exact but are statistical approximations.</p>
+<p>use <code>gcc -pg profiling.c</code> to enable analysis and use <code>gprof a.out gmon.out</code> to get the call graph and analysys report.</p>
+<h4 id="valgrind">valgrind</h4>
+<p>valgrind is another program to check memory leaks. It is a really slow program but detects the memory leaks.</p>
+<pre class="hljs"><code><div>valgrind --leak-check=yes ./a.out
+</div></code></pre>
+<h3 id="static-analysys">Static analysys</h3>
+<p>Static analysys is the method of examining the source code automatically without running it. This makes us an understanding about the code structure and industry standards.
+Eg:</p>
+<ul>
+<li>Coverity ( by Synopsis )</li>
+<li>CodeSonar ( by Grammatech )
+<ul>
+<li>Used by US food and drugs Administration and NASA</li>
+</ul>
+</li>
+</ul>
 
 </body>
 </html>
