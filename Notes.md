@@ -2042,3 +2042,144 @@ Eg:
 - Coverity ( by Synopsis )
 - CodeSonar ( by Grammatech )
     - Used by US food and drugs Administration and NASA
+# Section 16
+## Advanced Pointers
+### Double Pointers
+We know that we can create pointers to any datatypes including user defined structs. What if we can make a pointer to another pointer variable. Double pointer is a pointer to a variable which stores an address of another variable. It can be created by:
+```c
+int ** dp;
+```
+Example code:
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    int a = 10;
+    int * p = &a;
+    int ** dp = &p;
+    printf("Value of dp: %p\n",dp);
+    printf("Value of p from dp: %p\n",*dp);
+    printf("Value of p directly: %p\n",p);
+    printf("Value of a from p: %d\n",*p);
+    printf("Value of a : %d\n",a);
+    return 0;
+}
+```
+We can also directly access the pointer to the pointer pointing data with a ```**```.
+```c
+printf("Value of a from dp: %d",**dp);
+```
+#### Use Cases
+1. When you have to change the value of a pointer that is passed to a function. 
+Example:
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+void myfun(int *p)
+{
+    int a = 5;
+    p = &a;
+} // This function cannot affect the value of p globally.
+
+void myFunD(int ** dp)
+{
+    int b = 5;
+    *dp = &b;
+} // This can assign the address of local variable b to a pointer and we can access it from higher scope.
+
+int main(int argc, char const *argv[])
+{
+    int *ptr = (int *)malloc(sizeof(int));
+    *ptr = 10;
+    printf("Value of ptr data is: %d\n", *ptr);
+    myfun(ptr);
+    printf("Value of ptr data is: %d\n", *ptr); // Same Output
+
+    int ** dp = &ptr;
+    myFunD(dp);
+    printf("Value of ptr data is: %d\n", *ptr); // The value will be changed.
+    return 0;
+}
+```
+### Function Pointers
+There are some addresses for a function also. We can:
+- Pass them to another functions
+- Returnded from functions
+- stored in arrays
+- assigned to another function pointers.
+
+The common use case is to tell another functions that which function to use next as an argument. Also we can use ```qsort()``` function which takes a user defined function as an argument to sort.
+
+Another use case is to build a dispatch table which is an array of function pointers which points to which function to use in a series. Menu driven programs are using this technique.
+
+Unlike normal pointers we have to define the whole prototype of the function when declaring a function pointer. Because the pointer only shows the address of the code of the function. We need more info.
+```c
+int (*pfunc)(int,int);
+```
+Example:
+```c
+#include <stdio.h>
+
+int addtwo(int a,int b){
+    return a + b;
+}
+int subtwo(int a,int b){
+    return a - b;
+}
+
+int main(int argc, char const *argv[])
+{
+    int (*pfunc)(int,int);
+    int option;
+    printf("Add (1) or Subtract(2) : ");
+    scanf("%d",&option);
+    switch (option)
+    {
+    case 1:
+        pfunc = addtwo;
+        break;
+    case 2:
+        pfunc = subtwo;
+        break;
+    default:
+        printf("Invalied Option...\n");
+        break;
+    }
+    printf("Answer is %d\n",pfunc(10,20));
+    return 0;
+}
+```
+We can also use typedef for simplifying the declaration.
+```c
+typedef int(*funType)(int,int);
+
+funtype pfunc = addtwo;
+```
+### Void Pointers
+Void pointers are pointers which do not have a specific datatype and we can store any type of data into them. Declared by:
+```c
+void * vp
+```
+Example:
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    void * vp;
+    int a = 10;
+    vp = &a;
+    printf("%p\n",vp);
+    // To get the value,
+    printf("%d\n",*(int *)vp);
+
+    float b = 10.5;
+    vp = &b;
+    printf("%p\n",vp);
+    // To get the value,
+    printf("%f\n",*(float *)vp);
+    return 0;
+}
+```
