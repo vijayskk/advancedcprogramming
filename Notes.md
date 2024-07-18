@@ -2183,3 +2183,101 @@ int main(int argc, char const *argv[])
     return 0;
 }
 ```
+# Section 17 
+## Static libraries and shared objects
+We can create our own libraries and use the same code across the programs. They are called static libraries. Also we can share code using dynamic libraries at runtime. 
+
+library is a group of files
+- a header ```.h``` file containing the prototypes called **Interface**.
+- The actual implementation is stored in another c file.
+
+In order to access a c function across applications it have to be seperated from the source and implemented as a library.
+### Advantages
+- Fast compilation times.
+- Allows to make APIs for vendors.
+- Allows modular development.
+- Software reuse.
+- Version management.
+- Component specialization
+
+The linker software is responsible for collecting the libraries object files and making them available for the main program. The linker accomplishes this in two ways.
+- Static linking
+    - In static linking all the object code for the used library functions are compied into the main object file.
+- Dynamic linking
+    - In dynamic linking the binary file itself is taken into RAM in the runtime, and labeled in the main object file.
+### Static Linking
+When you perform a static linking the library code is a part of your application. The primary advantage is speed. 
+- There is no program entity resolution at the runtime. Everything is resolved.
+- Every piece of library is part of the main executable.
+- We don't have to worry about client's available library and versions.
+Disadvantages:
+- Creates a larger binary files.
+- Once program is linked you have no way of correcting bugs in the library function.
+### Dynamic linking
+Performs linking on the fly as the programs executed.
+- Libraries are loaded to memory only when it is executed.
+- Only have to recompile the library when any chnages are needed.
+- Also we can put a downloaded library and put it on the system and good to go ( No recompilation ).
+- More modern approach, and has a much smaller executable size.
+- More efficient use of disk and quicker linking with a runtime penalty.
+- Helps more in performance because of libraries are attatched to the process only when in need.
+
+### Static Library
+- Uses static linking.
+- each process gets a copy of the code
+- Known as an archive with a filetype of ```.a```
+
+### Shared Object library
+- Dynamically linked at the runtime.
+- Not included in the executable and linked to the process in runtime.
+- Code is shared between and data is specific to each process.
+### Library conventions
+- Dynamic libraries are useally named ```libsomething.so```.
+- Static libraries are called ```libsomething.a``` ( on windows ```libsomething.lib``` ).
+### Creating a Static Library (*archive*)
+It is a bunch of object files that are wrapped into a single file. Created by an archive utility.
+
+Steps:
+- First create a directory and store the source fil(main.c) and header file (myLib.h).
+- use gcc to compile the main file (headers will be automatically compiled).
+```bash
+gcc -c main.c -o lib-myLib.o
+```
+- Then use the ar utiliy to pack the .o files into a .a file.
+```bash
+ar rcs lib_myLib.a lib-myLib.o 
+```
+- Test the object files in a .a file with:
+```bash
+ar -t lib_myLib.a
+```
+- Now come back to the main program and compile it using -c.
+```bash
+gcc -I myLib/ -c sharedlib.c -o main.o
+```
+- Now link it using:
+```bash
+gcc main.o myLib/lib_myLib.a 
+```
+- You'll get a.out and be happy.
+### Creating a dynamic library
+Steps:
+- First create a directory and store the source fil(main.c) and header file (myLib.h).
+- use gcc to compile the main file.
+```bash
+gcc -g -fPIC main.c -shared -o libdynLib.so
+```
+- Now come back to the main program and compile it using -c.
+```bash
+gcc -I dynLib/ -c mycode.c -o main.o
+```
+- Now link the program to the shared library
+```bash
+gcc -o main.out main.o -L dynLib/ -l dynlib
+```
+- In order to run it we have to set an environment variable.
+```bash
+export LD_LIBRARY_PATH=/Users/vijaysatheesh/Advanced\ C\ Programming/Section\ 17/dynlib
+```
+- You'll get a.out and be happy.
+
