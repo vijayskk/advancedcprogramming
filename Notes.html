@@ -2456,6 +2456,310 @@ Eg:</p>
 </ul>
 </li>
 </ul>
+<h1 id="section-16">Section 16</h1>
+<h2 id="advanced-pointers">Advanced Pointers</h2>
+<h3 id="double-pointers">Double Pointers</h3>
+<p>We know that we can create pointers to any datatypes including user defined structs. What if we can make a pointer to another pointer variable. Double pointer is a pointer to a variable which stores an address of another variable. It can be created by:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">int</span> ** dp;
+</div></code></pre>
+<p>Example code:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">int</span> a = <span class="hljs-number">10</span>;
+    <span class="hljs-keyword">int</span> * p = &amp;a;
+    <span class="hljs-keyword">int</span> ** dp = &amp;p;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Value of dp: %p\n"</span>,dp);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Value of p from dp: %p\n"</span>,*dp);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Value of p directly: %p\n"</span>,p);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Value of a from p: %d\n"</span>,*p);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Value of a : %d\n"</span>,a);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>We can also directly access the pointer to the pointer pointing data with a <code>**</code>.</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">printf</span>(<span class="hljs-string">"Value of a from dp: %d"</span>,**dp);
+</div></code></pre>
+<h4 id="use-cases">Use Cases</h4>
+<ol>
+<li>When you have to change the value of a pointer that is passed to a function.
+Example:</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">myfun</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *p)</span>
+</span>{
+    <span class="hljs-keyword">int</span> a = <span class="hljs-number">5</span>;
+    p = &amp;a;
+} <span class="hljs-comment">// This function cannot affect the value of p globally.</span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">myFunD</span><span class="hljs-params">(<span class="hljs-keyword">int</span> ** dp)</span>
+</span>{
+    <span class="hljs-keyword">int</span> b = <span class="hljs-number">5</span>;
+    *dp = &amp;b;
+} <span class="hljs-comment">// This can assign the address of local variable b to a pointer and we can access it from higher scope.</span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">int</span> *ptr = (<span class="hljs-keyword">int</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>));
+    *ptr = <span class="hljs-number">10</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Value of ptr data is: %d\n"</span>, *ptr);
+    myfun(ptr);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Value of ptr data is: %d\n"</span>, *ptr); <span class="hljs-comment">// Same Output</span>
+
+    <span class="hljs-keyword">int</span> ** dp = &amp;ptr;
+    myFunD(dp);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Value of ptr data is: %d\n"</span>, *ptr); <span class="hljs-comment">// The value will be changed.</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="function-pointers">Function Pointers</h3>
+<p>There are some addresses for a function also. We can:</p>
+<ul>
+<li>Pass them to another functions</li>
+<li>Returnded from functions</li>
+<li>stored in arrays</li>
+<li>assigned to another function pointers.</li>
+</ul>
+<p>The common use case is to tell another functions that which function to use next as an argument. Also we can use <code>qsort()</code> function which takes a user defined function as an argument to sort.</p>
+<p>Another use case is to build a dispatch table which is an array of function pointers which points to which function to use in a series. Menu driven programs are using this technique.</p>
+<p>Unlike normal pointers we have to define the whole prototype of the function when declaring a function pointer. Because the pointer only shows the address of the code of the function. We need more info.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">int</span> (*pfunc)(<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span>);
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">addtwo</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>{
+    <span class="hljs-keyword">return</span> a + b;
+}
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">subtwo</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>{
+    <span class="hljs-keyword">return</span> a - b;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">int</span> (*pfunc)(<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span>);
+    <span class="hljs-keyword">int</span> option;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Add (1) or Subtract(2) : "</span>);
+    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>,&amp;option);
+    <span class="hljs-keyword">switch</span> (option)
+    {
+    <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:
+        pfunc = addtwo;
+        <span class="hljs-keyword">break</span>;
+    <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:
+        pfunc = subtwo;
+        <span class="hljs-keyword">break</span>;
+    <span class="hljs-keyword">default</span>:
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Invalied Option...\n"</span>);
+        <span class="hljs-keyword">break</span>;
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Answer is %d\n"</span>,pfunc(<span class="hljs-number">10</span>,<span class="hljs-number">20</span>));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>We can also use typedef for simplifying the declaration.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">int</span><span class="hljs-params">(*funType)</span><span class="hljs-params">(<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span>)</span></span>;
+
+funtype pfunc = addtwo;
+</div></code></pre>
+<h3 id="void-pointers">Void Pointers</h3>
+<p>Void pointers are pointers which do not have a specific datatype and we can store any type of data into them. Declared by:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">void</span> * vp
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">void</span> * vp;
+    <span class="hljs-keyword">int</span> a = <span class="hljs-number">10</span>;
+    vp = &amp;a;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%p\n"</span>,vp);
+    <span class="hljs-comment">// To get the value,</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>,*(<span class="hljs-keyword">int</span> *)vp);
+
+    <span class="hljs-keyword">float</span> b = <span class="hljs-number">10.5</span>;
+    vp = &amp;b;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%p\n"</span>,vp);
+    <span class="hljs-comment">// To get the value,</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%f\n"</span>,*(<span class="hljs-keyword">float</span> *)vp);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h1 id="section-17">Section 17</h1>
+<h2 id="static-libraries-and-shared-objects">Static libraries and shared objects</h2>
+<p>We can create our own libraries and use the same code across the programs. They are called static libraries. Also we can share code using dynamic libraries at runtime.</p>
+<p>library is a group of files</p>
+<ul>
+<li>a header <code>.h</code> file containing the prototypes called <strong>Interface</strong>.</li>
+<li>The actual implementation is stored in another c file.</li>
+</ul>
+<p>In order to access a c function across applications it have to be seperated from the source and implemented as a library.</p>
+<h3 id="advantages">Advantages</h3>
+<ul>
+<li>Fast compilation times.</li>
+<li>Allows to make APIs for vendors.</li>
+<li>Allows modular development.</li>
+<li>Software reuse.</li>
+<li>Version management.</li>
+<li>Component specialization</li>
+</ul>
+<p>The linker software is responsible for collecting the libraries object files and making them available for the main program. The linker accomplishes this in two ways.</p>
+<ul>
+<li>Static linking
+<ul>
+<li>In static linking all the object code for the used library functions are compied into the main object file.</li>
+</ul>
+</li>
+<li>Dynamic linking
+<ul>
+<li>In dynamic linking the binary file itself is taken into RAM in the runtime, and labeled in the main object file.</li>
+</ul>
+</li>
+</ul>
+<h3 id="static-linking">Static Linking</h3>
+<p>When you perform a static linking the library code is a part of your application. The primary advantage is speed.</p>
+<ul>
+<li>There is no program entity resolution at the runtime. Everything is resolved.</li>
+<li>Every piece of library is part of the main executable.</li>
+<li>We don't have to worry about client's available library and versions.
+Disadvantages:</li>
+<li>Creates a larger binary files.</li>
+<li>Once program is linked you have no way of correcting bugs in the library function.</li>
+</ul>
+<h3 id="dynamic-linking">Dynamic linking</h3>
+<p>Performs linking on the fly as the programs executed.</p>
+<ul>
+<li>Libraries are loaded to memory only when it is executed.</li>
+<li>Only have to recompile the library when any chnages are needed.</li>
+<li>Also we can put a downloaded library and put it on the system and good to go ( No recompilation ).</li>
+<li>More modern approach, and has a much smaller executable size.</li>
+<li>More efficient use of disk and quicker linking with a runtime penalty.</li>
+<li>Helps more in performance because of libraries are attatched to the process only when in need.</li>
+</ul>
+<h3 id="static-library">Static Library</h3>
+<ul>
+<li>Uses static linking.</li>
+<li>each process gets a copy of the code</li>
+<li>Known as an archive with a filetype of <code>.a</code></li>
+</ul>
+<h3 id="shared-object-library">Shared Object library</h3>
+<ul>
+<li>Dynamically linked at the runtime.</li>
+<li>Not included in the executable and linked to the process in runtime.</li>
+<li>Code is shared between and data is specific to each process.</li>
+</ul>
+<h3 id="library-conventions">Library conventions</h3>
+<ul>
+<li>Dynamic libraries are useally named <code>libsomething.so</code>.</li>
+<li>Static libraries are called <code>libsomething.a</code> ( on windows <code>libsomething.lib</code> ).</li>
+</ul>
+<h3 id="creating-a-static-library-archive">Creating a Static Library (<em>archive</em>)</h3>
+<p>It is a bunch of object files that are wrapped into a single file. Created by an archive utility.</p>
+<p>Steps:</p>
+<ul>
+<li>First create a directory and store the source fil(main.c) and header file (myLib.h).</li>
+<li>use gcc to compile the main file (headers will be automatically compiled).</li>
+</ul>
+<pre class="hljs"><code><div>gcc -c main.c -o lib-myLib.o
+</div></code></pre>
+<ul>
+<li>Then use the ar utiliy to pack the .o files into a .a file.</li>
+</ul>
+<pre class="hljs"><code><div>ar rcs lib_myLib.a lib-myLib.o 
+</div></code></pre>
+<ul>
+<li>Test the object files in a .a file with:</li>
+</ul>
+<pre class="hljs"><code><div>ar -t lib_myLib.a
+</div></code></pre>
+<ul>
+<li>Now come back to the main program and compile it using -c.</li>
+</ul>
+<pre class="hljs"><code><div>gcc -I myLib/ -c sharedlib.c -o main.o
+</div></code></pre>
+<ul>
+<li>Now link it using:</li>
+</ul>
+<pre class="hljs"><code><div>gcc main.o myLib/lib_myLib.a 
+</div></code></pre>
+<ul>
+<li>You'll get a.out and be happy.</li>
+</ul>
+<h3 id="creating-a-dynamic-library">Creating a dynamic library</h3>
+<p>Steps:</p>
+<ul>
+<li>First create a directory and store the source fil(main.c) and header file (myLib.h).</li>
+<li>use gcc to compile the main file.</li>
+</ul>
+<pre class="hljs"><code><div>gcc -g -fPIC main.c -shared -o libdynLib.so
+</div></code></pre>
+<ul>
+<li>Now come back to the main program and compile it using -c.</li>
+</ul>
+<pre class="hljs"><code><div>gcc -I dynLib/ -c mycode.c -o main.o
+</div></code></pre>
+<ul>
+<li>Now link the program to the shared library</li>
+</ul>
+<pre class="hljs"><code><div>gcc -o main.out main.o -L dynLib/ -l dynlib
+</div></code></pre>
+<ul>
+<li>In order to run it we have to set an environment variable.</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-built_in">export</span> LD_LIBRARY_PATH=/Users/vijaysatheesh/Advanced\ C\ Programming/Section\ 17/dynlib
+</div></code></pre>
+<ul>
+<li>You'll get a.out and be happy.</li>
+</ul>
+<h3 id="dynamic-loading">Dynamic loading</h3>
+<p>This is used when we don't need the libraries at compile time and only needs when the program executes. So we load it dynamically.
+There is an API for doing this. It is included in <code>&lt;dlfcn.h&gt;</code>.</p>
+<ul>
+<li>The first function <code>dlopen()</code> opens a library and prepares it for use.</li>
+<li><code>void * dlopen(const char * filename,int flag)</code>.</li>
+<li>There are two flags.<code>RTLD_LAZY</code> or <code>RTLD_NOW</code></li>
+<li>RTLD_LAZY means to resolve undefined function calls.</li>
+<li>RTLD_NOW means to resolve all undefined function calls before dlopen() returns and fail if not possible (used for debugging).</li>
+<li>dlopen() returns a handle and it is used for other routines.</li>
+</ul>
+<p><code>dlerror()</code> function returns the errors from last call.</p>
+<p>The main routine for using a dynamic library is <code>dlsym()</code> function. This looks up for a value of a function call in an opened library. Returnes NULL if the symbol not found.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;dlfcn.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">void</span> * handle = <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">double</span> (*cosine) (<span class="hljs-keyword">double</span>) = <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">char</span> * error = <span class="hljs-literal">NULL</span>;
+
+    handle = dlopen(<span class="hljs-string">"/usr/lib/aarch64-linux-gnu/libm.so.6"</span>,RTLD_LAZY);
+
+    <span class="hljs-keyword">if</span>(!handle){
+        putc(dlerror(),<span class="hljs-built_in">stderr</span>);
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+    }
+
+    dlerror();
+
+    cosine = dlsym(handle,<span class="hljs-string">"cos"</span>);
+
+    <span class="hljs-keyword">if</span>(!handle){
+        putc(dlerror(),<span class="hljs-built_in">stderr</span>);
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+    }
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%f\n"</span>,cosine(<span class="hljs-number">0.5</span>));
+
+    dlclose(handle);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
 
 </body>
 </html>
