@@ -2305,7 +2305,7 @@ int main(int argc, char const *argv[])
     double (*cosine) (double) = NULL;
     char * error = NULL;
 
-    handle = dlopen("pathtolib",RTLD_LAZY);
+    handle = dlopen("/usr/lib/aarch64-linux-gnu/libm.so.6",RTLD_LAZY);
 
     if(!handle){
         putc(dlerror(),stderr);

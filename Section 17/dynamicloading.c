@@ -8,9 +8,9 @@ int main(int argc, char const *argv[])
     double (*cosine) (double) = NULL;
     char * error = NULL;
 
-    handle = dlopen("pathtolib",RTLD_LAZY);
+    handle = dlopen("/usr/lib/aarch64-linux-gnu/libm.so.6",RTLD_LAZY);
 
-    if((error = dlerror()) != NULL){
+    if(handle == NULL){
         exit(1);
     }
 
@@ -18,9 +18,6 @@ int main(int argc, char const *argv[])
 
     cosine = dlsym(handle,"cos");
 
-    if(!handle){
-        exit(1);
-    }
 
     printf("%f\n",cosine(0.5));
 
