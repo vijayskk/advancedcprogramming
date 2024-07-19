@@ -2281,3 +2281,50 @@ export LD_LIBRARY_PATH=/Users/vijaysatheesh/Advanced\ C\ Programming/Section\ 17
 ```
 - You'll get a.out and be happy.
 
+### Dynamic loading
+This is used when we don't need the libraries at compile time and only needs when the program executes. So we load it dynamically. 
+There is an API for doing this. It is included in ```<dlfcn.h>```.
+- The first function ```dlopen()``` opens a library and prepares it for use.
+- ```void * dlopen(const char * filename,int flag)```.
+- There are two flags.```RTLD_LAZY``` or ```RTLD_NOW```
+- RTLD_LAZY means to resolve undefined function calls.
+- RTLD_NOW means to resolve all undefined function calls before dlopen() returns and fail if not possible (used for debugging).
+- dlopen() returns a handle and it is used for other routines.
+
+```dlerror()``` function returns the errors from last call.
+
+The main routine for using a dynamic library is ```dlsym()``` function. This looks up for a value of a function call in an opened library. Returnes NULL if the symbol not found.
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <dlfcn.h>
+
+int main(int argc, char const *argv[])
+{
+    void * handle = NULL;
+    double (*cosine) (double) = NULL;
+    char * error = NULL;
+
+    handle = dlopen("pathtolib",RTLD_LAZY);
+
+    if(!handle){
+        putc(dlerror(),stderr);
+        exit(1);
+    }
+
+    dlerror();
+
+    cosine = dlsym(handle,"cos");
+
+    if(!handle){
+        putc(dlerror(),stderr);
+        exit(1);
+    }
+
+    printf("%f\n",cosine(0.5));
+
+    dlclose(handle);
+    return 0;
+}
+```
+
