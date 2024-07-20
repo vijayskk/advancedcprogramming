@@ -2760,6 +2760,389 @@ There is an API for doing this. It is included in <code>&lt;dlfcn.h&gt;</code>.<
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </div></code></pre>
+<h1 id="section-18">Section 18</h1>
+<h2 id="usefull-c-libraries">Usefull C libraries</h2>
+<h3 id="assert">Assert</h3>
+<p>Assert is a run time checking library which is defined in assert.h. It enables us to test expressions in our program and mostly used for debugging.
+The program will be terminated with a diagnostic message. The termination is held by calling the abort function. This is only for finding logical errors.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;assert.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> BATT</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BATT 10</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    assert(BATT &gt; <span class="hljs-number">25</span>); <span class="hljs-comment">// Because Battery is important for further working..</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Working...\n"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>Output:</p>
+<pre class="hljs"><code><div>Assertion failed: (BATT &gt; 25), <span class="hljs-keyword">function</span> main, file assertfn.c, line 9.
+zsh: abort      ./a.out
+</div></code></pre>
+<p>The assertions can be switched off by defining NDEBUG before the inclusion of assert.h</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> NDEBUG</span>
+<span class="hljs-comment">// #undef NDEBUG will turn assertions on</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;assert.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> BATT</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BATT 10</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    assert(BATT &gt; <span class="hljs-number">25</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Working...\n"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>We can also use assert.h library for compile time assertions. using the <code>static_assert()</code> macro.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">static_assert</span>(expression,<span class="hljs-string">"Message"</span>);
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;assert.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> BATT</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BATT 10</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">static_assert</span>(BATT &gt; <span class="hljs-number">25</span>,<span class="hljs-string">"Battery low.Compiling aborted..."</span>);
+    
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>Output:</p>
+<pre class="hljs"><code><div>staticassert.c:10:5: error: static assertion failed due to requirement <span class="hljs-string">'10 &gt; 25'</span>: Battery low.Compiling aborted...
+    static_assert(BATT &gt; 25,<span class="hljs-string">"Battery low.Compiling aborted..."</span>);
+</div></code></pre>
+<h3 id="general-functions">General Functions</h3>
+<h4 id="exit"><code>exit()</code></h4>
+<p>This is used to forcefully terminate the main function with an integer return value.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">exit</span><span class="hljs-params">(<span class="hljs-keyword">int</span> status)</span></span>;
+</div></code></pre>
+<p>Advantages:</p>
+<ul>
+<li>Flushes all output and input streams</li>
+<li>Closes all opened streams.</li>
+<li>Closes all temperory files created by calls to the standard I/O function tempfile().</li>
+</ul>
+<h4 id="atexit"><code>atexit()</code></h4>
+<p>This function allow us to call a function when the exit() function is evoked. Pass the pointer to the function. We can set upto 32 functions. The function cannot have any return types or arguments should be void. Typically these functions will do the housekeeping tasks.</p>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">sign_off</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Program is Quitting...\nGoodbye...\n"</span>);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">another_fn</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Dummy...\n"</span>);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    atexit(sign_off);
+    atexit(another_fn);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++)
+    {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>, i);
+        <span class="hljs-keyword">if</span> (i &gt; <span class="hljs-number">5</span>)
+        {
+            <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);
+        }
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h4 id="abort"><code>abort()</code></h4>
+<p>This causes an abnormal termination of the program. A signal SIGABRT will be raised ( more about signals later ). It geerates a noticable failiure and dumps core.
+During abort:</p>
+<ul>
+<li>File buffers are not flushed.</li>
+<li>Streams are not closed.</li>
+<li>Temporory files are not deleted.</li>
+<li>Functions passed to atexit() are not called.</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">abort</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>;
+</div></code></pre>
+<h4 id="qsort"><code>qsort()</code></h4>
+<p>Quick sort is an efficient algorithm for sorting. It is particularly good for larger arrays.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">qsort</span><span class="hljs-params">( <span class="hljs-keyword">void</span> * base,
+            <span class="hljs-keyword">size_t</span> nmemb,
+            <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>,
+            <span class="hljs-keyword">int</span> (*compare)(<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *,<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *)
+  )</span>
+</span></div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">compare</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *)</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">int</span> data[<span class="hljs-number">5</span>] = {<span class="hljs-number">12</span>, <span class="hljs-number">43</span>, <span class="hljs-number">23</span>, <span class="hljs-number">12</span>, <span class="hljs-number">1</span>};
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++)
+    {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d  "</span>, data[i]);
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\n"</span>);
+
+    qsort(data, <span class="hljs-number">5</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>), compare);
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++)
+    {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d  "</span>, data[i]);
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\n"</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">compare</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *pa, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *pb)</span>
+</span>{
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> a = *(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> *)pa;
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> b = *(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> *)pb;
+    <span class="hljs-keyword">return</span> b - a; <span class="hljs-comment">// a-b for ascending</span>
+};
+</div></code></pre>
+<h4 id="atoi"><code>atoi()</code></h4>
+<p>This converts the ascii string numbers to integer type.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">atoi</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * <span class="hljs-built_in">string</span>)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-keyword">char</span> a[<span class="hljs-number">10</span>] = <span class="hljs-string">"100"</span>;
+    <span class="hljs-keyword">int</span> value = atoi(a); <span class="hljs-comment">// Outputs 100 as integer.</span>
+}
+</div></code></pre>
+<h4 id="atof"><code>atof()</code></h4>
+<p>This converts the ascii string floating numbers to float type.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">float</span> <span class="hljs-title">atof</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * <span class="hljs-built_in">string</span>)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-keyword">char</span> a[<span class="hljs-number">10</span>] = <span class="hljs-string">"3.14"</span>;
+    <span class="hljs-keyword">float</span> value = atof(a); <span class="hljs-comment">// Outputs 3.14 as float.</span>
+}
+</div></code></pre>
+<h4 id="atol"><code>atol()</code></h4>
+<p>This converts the ascii string long numbers to long integer type.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">long</span> <span class="hljs-title">atol</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * <span class="hljs-built_in">string</span>)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-keyword">char</span> a[<span class="hljs-number">10</span>] = <span class="hljs-string">"1000000000"</span>;
+    <span class="hljs-keyword">long</span> value = atol(a); <span class="hljs-comment">// Outputs 1000000000 as long integer.</span>
+}
+</div></code></pre>
+<h4 id="strtod"><code>strtod()</code></h4>
+<p>This converts the ascii string double numbers including trailing letters ( They will be automatically removed ) to double type.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">strtod</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * <span class="hljs-built_in">string</span>, <span class="hljs-keyword">char</span> ** st_end)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-keyword">char</span> a[<span class="hljs-number">10</span>] = <span class="hljs-string">"3.14 14.3"</span>;
+    <span class="hljs-keyword">char</span> * <span class="hljs-built_in">end</span>;
+    <span class="hljs-keyword">double</span> value = strtod(a,&amp;<span class="hljs-built_in">end</span>); <span class="hljs-comment">// Outputs 3.14 as double.</span>
+    <span class="hljs-keyword">double</span> value <span class="hljs-number">2</span> = strtod(<span class="hljs-built_in">end</span>,<span class="hljs-literal">NULL</span>);<span class="hljs-comment">// Gets the next value.</span>
+
+}
+</div></code></pre>
+<h4 id="strtol"><code>strtol()</code></h4>
+<p>This converts the ascii string long numbers to long type with a base.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">strtol</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * <span class="hljs-built_in">string</span>, <span class="hljs-keyword">char</span> ** st_end,<span class="hljs-keyword">int</span> base)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-keyword">char</span> a[<span class="hljs-number">10</span>] = <span class="hljs-string">"300000 14000000000"</span>;
+    <span class="hljs-keyword">char</span> * <span class="hljs-built_in">end</span>;
+    <span class="hljs-keyword">long</span> value = strtod(a,&amp;<span class="hljs-built_in">end</span>,<span class="hljs-number">10</span>); <span class="hljs-comment">// Outputs 300000 as long.</span>
+    <span class="hljs-keyword">long</span> value <span class="hljs-number">2</span> = strtod(<span class="hljs-built_in">end</span>,<span class="hljs-literal">NULL</span>,<span class="hljs-number">10</span>);<span class="hljs-comment">// Gets the next value.</span>
+
+}
+</div></code></pre>
+<h3 id="random-numbers">Random numbers</h3>
+<p>C provides two functions for generating random numbers.<code>rand()</code> and <code>srand()</code>. It generally uses hardware sources for generating random numbers like time and network traffic. It is a really hard job and it provides a seed for every random number.</p>
+<h4 id="rand"><code>rand()</code></h4>
+<p>It provides a random integer number. RAND_MAX defines the maximum value of a random variable in a system. It is defined in stdlib.h and have a minimum value of 32767.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">rand</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>; 
+</div></code></pre>
+<h4 id="srand"><code>srand()</code></h4>
+<p>It controls the seed of the generated random numbers. Seed is defaulted into 1.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">srand</span><span class="hljs-params">(<span class="hljs-keyword">unsigned</span> seed)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">if</span> (argc &gt; <span class="hljs-number">1</span>)
+    {
+        srand(atoi(argv[<span class="hljs-number">1</span>]));
+    }<span class="hljs-keyword">else</span>{
+        srand(<span class="hljs-number">1</span>);
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d\n"</span>,rand());
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="system"><code>system()</code></h3>
+<p>This function executes a system command in a shell.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">system</span><span class="hljs-params">(<span class="hljs-keyword">char</span> * command)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    system(<span class="hljs-string">"ls -la"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="getenv"><code>getenv()</code></h3>
+<p>This function returns the environment varaiable value that is passed in. Returns NULL if not found.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">char</span> * <span class="hljs-title">getenv</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * name)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s"</span>,getenv(<span class="hljs-string">"HOME"</span>));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>Output:</p>
+<pre class="hljs"><code><div>/Users/vijaysatheesh
+</div></code></pre>
+<h3 id="memcpy"><code>memcpy()</code></h3>
+<p>This copies content from consecutive memory location to another.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">void</span> * <span class="hljs-title">memcpy</span><span class="hljs-params">(<span class="hljs-keyword">void</span> * s1,<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> * s2, <span class="hljs-keyword">size_t</span> n)</span></span>;
+</div></code></pre>
+<h3 id="memmoves"><code>memmoves()</code></h3>
+<p>This moves content from consecutive memory location to another.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">void</span> * <span class="hljs-title">memmove</span><span class="hljs-params">(<span class="hljs-keyword">void</span> * s1,<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> * s2, <span class="hljs-keyword">size_t</span> n)</span></span>;
+</div></code></pre>
+<h3 id="strdup-and-strndup"><code>strdup() and strndup()</code></h3>
+<p>This is used to duplicate a string.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">char</span> * <span class="hljs-title">strdup</span><span class="hljs-params">(<span class="hljs-keyword">char</span> * source)</span></span>;
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">char</span> * <span class="hljs-title">strndup</span><span class="hljs-params">(<span class="hljs-keyword">char</span> * source,<span class="hljs-keyword">int</span> length)</span></span>;
+</div></code></pre>
+<h3 id="date-and-time-functions">Date and time functions</h3>
+<h4 id="clock"><code>clock()</code></h4>
+<p>This function returns the processor time. Often since execution began.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">clock_t</span> <span class="hljs-title">clock</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>;
+</div></code></pre>
+<p>Typically measured at the start and end of the program.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;time.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">clock_t</span> start,<span class="hljs-built_in">end</span>;
+    <span class="hljs-keyword">double</span> cputime = <span class="hljs-number">0.0</span>;
+
+    start = clock();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100000000</span>; i++)
+    {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">""</span>);
+    }
+    <span class="hljs-built_in">end</span> = clock();
+    cputime = (<span class="hljs-keyword">double</span>)(<span class="hljs-built_in">end</span> - start)/CLOCKS_PER_SEC;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"CPU took %f seconds.\n"</span>,cputime);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h4 id="time"><code>time()</code></h4>
+<p>Returnes the elapsed seconds from Jan 1 1970 (Calendar time).</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">time_t</span> <span class="hljs-title">time</span><span class="hljs-params">(<span class="hljs-keyword">time_t</span> * timer)</span></span>;
+</div></code></pre>
+<p>The function <code>difftime()</code> returnes the differences between two times.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">difftime</span><span class="hljs-params">(<span class="hljs-keyword">time_t</span> t1,<span class="hljs-keyword">time_t</span> t2)</span></span>;
+</div></code></pre>
+<h4 id="ctime"><code>ctime()</code></h4>
+<p>Used to get todays time as a string.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">char</span> * <span class="hljs-title">ctime</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">time_t</span> * timer)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;time.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">time_t</span> currtime;
+    currtime = time(<span class="hljs-number">0</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s"</span>,ctime(&amp;currtime));<span class="hljs-comment">//Sat Jul 20 16:30:36 2024</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h4 id="localtime"><code>localtime()</code></h4>
+<p>Returnes the struct that includes all of the callendar details.</p>
+<pre class="hljs"><code><div><span class="hljs-function">struct tm * <span class="hljs-title">localtime</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">time_t</span> * timer)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;time.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">time_t</span> currtime = time(<span class="hljs-number">0</span>);
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tm</span> * <span class="hljs-title">localdata</span> = <span class="hljs-title">localtime</span>(&amp;<span class="hljs-title">currtime</span>);</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Year is: %d\n"</span>,localdata-&gt;tm_year + <span class="hljs-number">1900</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Month is: %d\n"</span>,localdata-&gt;tm_mon);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Day is: %d\n"</span>,localdata-&gt;tm_mday);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h4 id="asctime"><code>asctime()</code></h4>
+<p>This function generates a string from the calendar data.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">char</span> * <span class="hljs-title">asctime</span><span class="hljs-params">(<span class="hljs-keyword">const</span> struct tm * time_data)</span></span>;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;time.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">time_t</span> currtime = time(<span class="hljs-number">0</span>);
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tm</span> * <span class="hljs-title">localdata</span> = <span class="hljs-title">localtime</span>(&amp;<span class="hljs-title">currtime</span>);</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s\n"</span>,asctime(localdata));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h4 id="mktime"><code>mktime()</code></h4>
+<p>This function will provide all info from a date. We have to make a tm struct and fill year month and day and feed into this function. The function will replace all other values. Returns -1 for a failiure.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">time_t</span> <span class="hljs-title">mktime</span><span class="hljs-params">(struct tm * ptime)</span></span>;
+</div></code></pre>
+<h4 id="gmtime"><code>gmtime()</code></h4>
+<p>This function is used to covert a time value into UTC in form of struct tm.</p>
+<pre class="hljs"><code><div><span class="hljs-function">struct tm * <span class="hljs-title">gmtime</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">time_t</span> * time)</span></span>;
+</div></code></pre>
 
 </body>
 </html>

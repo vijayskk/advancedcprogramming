@@ -2327,5 +2327,437 @@ int main(int argc, char const *argv[])
     return 0;
 }
 ```
- 
+# Section 18
+## Usefull C libraries
+### Assert
+Assert is a run time checking library which is defined in assert.h. It enables us to test expressions in our program and mostly used for debugging.
+The program will be terminated with a diagnostic message. The termination is held by calling the abort function. This is only for finding logical errors.
+```c
+#include <stdio.h>
+#include <assert.h>
+#ifndef BATT
+#define BATT 10
+#endif
 
+int main(int argc, char const *argv[])
+{
+    assert(BATT > 25); // Because Battery is important for further working..
+    printf("Working...\n");
+    return 0;
+}
+```
+Output:
+```bash
+Assertion failed: (BATT > 25), function main, file assertfn.c, line 9.
+zsh: abort      ./a.out
+```
+The assertions can be switched off by defining NDEBUG before the inclusion of assert.h
+```c
+#define NDEBUG
+// #undef NDEBUG will turn assertions on
+#include <stdio.h>
+#include <assert.h>
+#ifndef BATT
+#define BATT 10
+#endif
+
+int main(int argc, char const *argv[])
+{
+    assert(BATT > 25);
+    printf("Working...\n");
+    return 0;
+}
+```
+ 
+We can also use assert.h library for compile time assertions. using the ```static_assert()``` macro.
+```c
+static_assert(expression,"Message");
+```
+Example:
+```c
+#include <stdio.h>
+#include <assert.h>
+
+#ifndef BATT
+#define BATT 10
+#endif
+
+int main(int argc, char const *argv[])
+{
+    static_assert(BATT > 25,"Battery low.Compiling aborted...");
+    
+    return 0;
+}
+```
+Output:
+```bash
+staticassert.c:10:5: error: static assertion failed due to requirement '10 > 25': Battery low.Compiling aborted...
+    static_assert(BATT > 25,"Battery low.Compiling aborted...");
+```
+### General Functions
+#### ```exit()```
+This is used to forcefully terminate the main function with an integer return value.
+```c
+int exit(int status);
+```
+Advantages:
+- Flushes all output and input streams
+- Closes all opened streams.
+- Closes all temperory files created by calls to the standard I/O function tempfile().
+
+#### ```atexit()```
+This function allow us to call a function when the exit() function is evoked. Pass the pointer to the function. We can set upto 32 functions. The function cannot have any return types or arguments should be void. Typically these functions will do the housekeeping tasks.
+
+Example: 
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+void sign_off()
+{
+    printf("Program is Quitting...\nGoodbye...\n");
+}
+
+void another_fn()
+{
+    printf("Dummy...\n");
+}
+
+int main(int argc, char const *argv[])
+{
+    atexit(sign_off);
+    atexit(another_fn);
+    for (int i = 0; i < 10; i++)
+    {
+        printf("%d\n", i);
+        if (i > 5)
+        {
+            exit(0);
+        }
+    }
+
+    return 0;
+}
+```
+
+#### ```abort()```
+This causes an abnormal termination of the program. A signal SIGABRT will be raised ( more about signals later ). It geerates a noticable failiure and dumps core.
+During abort:
+- File buffers are not flushed.
+- Streams are not closed.
+- Temporory files are not deleted.
+- Functions passed to atexit() are not called.
+```c
+void abort(void);
+```
+#### ```qsort()```
+Quick sort is an efficient algorithm for sorting. It is particularly good for larger arrays. 
+```c
+void qsort( void * base,
+            size_t nmemb,
+            size_t size,
+            int (*compare)(const void *,const void *)
+  )
+```
+Example:
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int compare(const void *, const void *);
+
+int main(int argc, char const *argv[])
+{
+    int data[5] = {12, 43, 23, 12, 1};
+
+    for (int i = 0; i < 5; i++)
+    {
+        printf("%d  ", data[i]);
+    }
+    printf("\n");
+
+    qsort(data, 5, sizeof(int), compare);
+
+    for (int i = 0; i < 5; i++)
+    {
+        printf("%d  ", data[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
+
+int compare(const void *pa, const void *pb)
+{
+    const int a = *(const int *)pa;
+    const int b = *(const int *)pb;
+    return b - a; // a-b for ascending
+};
+```
+#### ```atoi()```
+This converts the ascii string numbers to integer type.
+```c
+int atoi(const char * string);
+```
+Example:
+```c
+#include <stdlib.h>
+
+int main(){
+    char a[10] = "100";
+    int value = atoi(a); // Outputs 100 as integer.
+}
+```
+
+#### ```atof()```
+This converts the ascii string floating numbers to float type.
+```c
+float atof(const char * string);
+```
+Example:
+```c
+#include <stdlib.h>
+
+int main(){
+    char a[10] = "3.14";
+    float value = atof(a); // Outputs 3.14 as float.
+}
+```
+
+#### ```atol()```
+This converts the ascii string long numbers to long integer type.
+```c
+long atol(const char * string);
+```
+Example:
+```c
+#include <stdlib.h>
+
+int main(){
+    char a[10] = "1000000000";
+    long value = atol(a); // Outputs 1000000000 as long integer.
+}
+```
+
+#### ```strtod()```
+This converts the ascii string double numbers including trailing letters ( They will be automatically removed ) to double type.
+```c
+double strtod(const char * string, char ** st_end);
+```
+Example:
+```c
+#include <stdlib.h>
+
+int main(){
+    char a[10] = "3.14 14.3";
+    char * end;
+    double value = strtod(a,&end); // Outputs 3.14 as double.
+    double value 2 = strtod(end,NULL);// Gets the next value.
+
+}
+```
+
+#### ```strtol()```
+This converts the ascii string long numbers to long type with a base.
+```c
+double strtol(const char * string, char ** st_end,int base);
+```
+Example:
+```c
+#include <stdlib.h>
+
+int main(){
+    char a[10] = "300000 14000000000";
+    char * end;
+    long value = strtod(a,&end,10); // Outputs 300000 as long.
+    long value 2 = strtod(end,NULL,10);// Gets the next value.
+
+}
+```
+### Random numbers
+C provides two functions for generating random numbers.```rand()``` and ```srand()```. It generally uses hardware sources for generating random numbers like time and network traffic. It is a really hard job and it provides a seed for every random number.
+
+#### ```rand()```
+It provides a random integer number. RAND_MAX defines the maximum value of a random variable in a system. It is defined in stdlib.h and have a minimum value of 32767.
+```c
+int rand(void); 
+```
+#### ```srand()```
+It controls the seed of the generated random numbers. Seed is defaulted into 1.
+```c
+void srand(unsigned seed);
+```
+Example:
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char const *argv[])
+{
+    if (argc > 1)
+    {
+        srand(atoi(argv[1]));
+    }else{
+        srand(1);
+    }
+    printf("%d\n",rand());
+    return 0;
+}
+```
+### ```system()```
+This function executes a system command in a shell.
+```c
+void system(char * command);
+```
+Example:
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char const *argv[])
+{
+    system("ls -la");
+    return 0;
+}
+```
+### ```getenv()```
+This function returns the environment varaiable value that is passed in. Returns NULL if not found.
+```c
+char * getenv(const char * name);
+```
+Example:
+```c
+#include <stdlib.h>
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    printf("%s",getenv("HOME"));
+    return 0;
+}
+```
+Output:
+```bash
+/Users/vijaysatheesh
+```
+### ```memcpy()```
+This copies content from consecutive memory location to another.
+```c
+void * memcpy(void * s1,const void * s2, size_t n);
+```
+### ```memmoves()```
+This moves content from consecutive memory location to another.
+```c
+void * memmove(void * s1,const void * s2, size_t n);
+```
+### ```strdup() and strndup()```
+This is used to duplicate a string.
+```c
+char * strdup(char * source);
+```
+```c
+char * strndup(char * source,int length);
+```
+### Date and time functions
+#### ```clock()```
+This function returns the processor time. Often since execution began.
+```c
+clock_t clock(void);
+```
+Typically measured at the start and end of the program.
+```c
+#include <stdio.h>
+#include <time.h>
+
+int main(int argc, char const *argv[])
+{
+    clock_t start,end;
+    double cputime = 0.0;
+
+    start = clock();
+    for (int i = 0; i < 100000000; i++)
+    {
+        printf("");
+    }
+    end = clock();
+    cputime = (double)(end - start)/CLOCKS_PER_SEC;
+    printf("CPU took %f seconds.\n",cputime);
+    return 0;
+}
+``` 
+#### ```time()```
+Returnes the elapsed seconds from Jan 1 1970 (Calendar time).
+```c
+time_t time(time_t * timer);
+```
+The function ```difftime()``` returnes the differences between two times.
+```c
+double difftime(time_t t1,time_t t2);
+```
+
+#### ```ctime()```
+Used to get todays time as a string. 
+```c
+char * ctime(const time_t * timer);
+```
+Example:
+```c
+#include <stdio.h>
+#include <time.h>
+
+int main(int argc, char const *argv[])
+{
+    time_t currtime;
+    currtime = time(0);
+    printf("%s",ctime(&currtime));//Sat Jul 20 16:30:36 2024
+    return 0;
+}
+```
+#### ```localtime()```
+Returnes the struct that includes all of the callendar details.
+```c
+struct tm * localtime(const time_t * timer);
+```
+Example:
+```c
+#include <stdio.h>
+#include <time.h>
+
+int main(int argc, char const *argv[])
+{
+    time_t currtime = time(0);
+    struct tm * localdata = localtime(&currtime);
+    printf("Year is: %d\n",localdata->tm_year + 1900);
+    printf("Month is: %d\n",localdata->tm_mon);
+    printf("Day is: %d\n",localdata->tm_mday);
+    return 0;
+}
+```
+#### ```asctime()```
+This function generates a string from the calendar data.
+```c
+char * asctime(const struct tm * time_data);
+```
+Example:
+```c
+#include <stdio.h>
+#include <time.h>
+
+int main(int argc, char const *argv[])
+{
+    time_t currtime = time(0);
+    struct tm * localdata = localtime(&currtime);
+    printf("%s\n",asctime(localdata));
+    return 0;
+}
+```
+#### ```mktime()```
+This function will provide all info from a date. We have to make a tm struct and fill year month and day and feed into this function. The function will replace all other values. Returns -1 for a failiure.
+```c
+time_t mktime(struct tm * ptime);
+```
+#### ```gmtime()```
+This function is used to covert a time value into UTC in form of struct tm.
+```c
+struct tm * gmtime(const time_t * time);
+```
