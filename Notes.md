@@ -2761,3 +2761,31 @@ This function is used to covert a time value into UTC in form of struct tm.
 ```c
 struct tm * gmtime(const time_t * time);
 ```
+# Section 19
+## Data Structures
+We need different data types when programming for our needs. A type contains two things:
+- Set of properties ( values )
+- Set of operations ( addition,subtracton,etc.. )
+
+### Abstract Data Type (ADT)
+It's behaviour is defined by a set of values and operations. Kinda like structures in c. It is only mentions what operations can be performed and not how. It is called abstract because of the implementation independent view that is only showing the essentials and hiding the details.
+
+Eg:
+- lists
+- stacks
+- trees
+- hashmaps
+- etc...
+
+### Linked List
+Linked list is essentially a Node and Link structure which have each node containing a value and a pointer to the next node. The end of the linked list have a pointer of NULL. There are two types:
+- Singly linked list
+    - Only next node is linked.
+- Doubly linked list
+    - Next and previous nodes are linked.
+
+Advantages:
+- They are naturally dynamic so suitable for high amount of data.
+- Prepending to a list is fast.
+- Inserting into a sorted list is very fast
+
