@@ -2789,3 +2789,75 @@ Advantages:
 - Prepending to a list is fast.
 - Inserting into a sorted list is very fast
 
+# Section 20 
+## Interprocess Communication
+### Process
+A process is a program in execution. Each process has it's own memmory and address space. And usually one thread of control.
+
+You can run a different process with a same program but they will have different address spaces. Each process have a parent process as a creator and the process itself is called a child. You can also have multiple processes in a same program.
+
+
+System Call: A system call is a request or service that made by the kernal.
+
+Each process is identiified with a positive integer called process id (PID). You can get the current PID with getpid() function in <unistd.h>.
+```c
+int getpid(void); // Gets the process id
+int getppid(void); // Gets the parent process id 
+```
+### Interprocess communication
+Interprocess communication (IPC) let processes work together.
+
+#### Different ways of communication
+There are some operating system techniques to make IPC possible.
+Pipes ( same process ):
+- First communicates with second program.
+- Half duplex.
+- Used for communicating between child and parent.
+- Same as a bucket and mug mechanism.
+                                                       
+Named Pipes ( different processes, FIFO):
+- Both process can communicate to other.
+- Full duplex.
+
+Message queues:
+- Process will commmunicate by sender posting a message and reciever pulls it from the queue.
+- Mix of signals and sockets.
+
+
+Shared Memory:
+- Communication between two or more processes achieved by sharing a piece of memory.
+
+Sockets
+- mostly used to communicate over a network between a client and a server.
+
+Signals:
+- Communication by raising signals.
+- Sent the signal as numbers.
+### Signals
+Signals can be genrated by the system or the user can raise it programmatically. A process can choose to ignore or recieve the signal.
+
+Cntrl + c -> SIGINT
+Cntrl + z -> SIGSTP
+fg -> SIGCONT
+
+There are some default signals that the program will automatically take action
+| Signal | Action |
+| :--: | :--: |
+| TERM | Terminate |
+| CORE | Terminate and dump core |
+| IGN | Ignore the signal |
+| STOP | Program will stop (Cntrl + z) |
+| CONT | The process will continue from stopping |
+
+```bash
+kill -l
+``` 
+Will display all the signals that can be given to a program.
+### Raising signals
+A signal can be raised by functions in <string.h> library.
+```raise()``` will send a signal to current process.```kill()``` will sent signal to another process for killing it.
+
+```c
+int raise(int sig);
+```
+if unsuccessfull raise will generate a nonzero value.
