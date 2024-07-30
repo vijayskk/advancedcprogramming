@@ -2861,3 +2861,35 @@ A signal can be raised by functions in <string.h> library.
 int raise(int sig);
 ```
 if unsuccessfull raise will generate a nonzero value.
+
+```alarm()``` will generate a SIGALARM and if no one catch it it will terminate after a time.
+```c
+void alarm(int timeinseconds);
+```
+### Handling signals
+You can let your program handle the signals that it recieves using ```signal()``` function. We can also ignore the signals.
+
+But some signals cannot be ignored,aborted or handled.
+- SIGKILL 
+- SIGABRT
+- SIGSTOP
+
+
+```c
+void (*sigreturn) (int);
+    sigreturn = signal(SIGINT,signalrecieved);
+```
+There is also a sigaction() function:
+```c
+struct sigaction new_action;
+new_action.sa_flags = 0;
+new_action.sa_handler = handleer;
+sigemptyset(&new_action.sa_mask);
+
+sigaction(SIGINT,NULL,&new_action);
+```
+
+### ```fork()```
+Fork function is used for creating new process within a process. It can be used for stuff like multitasking.
+- Fork creates a copy of the parent processes address space and it will not affect the parents memory. updating a memory in child won't affect in parent.
+
