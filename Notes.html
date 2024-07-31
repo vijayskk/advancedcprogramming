@@ -3143,6 +3143,390 @@ During abort:</p>
 <p>This function is used to covert a time value into UTC in form of struct tm.</p>
 <pre class="hljs"><code><div><span class="hljs-function">struct tm * <span class="hljs-title">gmtime</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">time_t</span> * time)</span></span>;
 </div></code></pre>
+<h1 id="section-19">Section 19</h1>
+<h2 id="data-structures">Data Structures</h2>
+<p>We need different data types when programming for our needs. A type contains two things:</p>
+<ul>
+<li>Set of properties ( values )</li>
+<li>Set of operations ( addition,subtracton,etc.. )</li>
+</ul>
+<h3 id="abstract-data-type-adt">Abstract Data Type (ADT)</h3>
+<p>It's behaviour is defined by a set of values and operations. Kinda like structures in c. It is only mentions what operations can be performed and not how. It is called abstract because of the implementation independent view that is only showing the essentials and hiding the details.</p>
+<p>Eg:</p>
+<ul>
+<li>lists</li>
+<li>stacks</li>
+<li>trees</li>
+<li>hashmaps</li>
+<li>etc...</li>
+</ul>
+<h3 id="linked-list">Linked List</h3>
+<p>Linked list is essentially a Node and Link structure which have each node containing a value and a pointer to the next node. The end of the linked list have a pointer of NULL. There are two types:</p>
+<ul>
+<li>Singly linked list
+<ul>
+<li>Only next node is linked.</li>
+</ul>
+</li>
+<li>Doubly linked list
+<ul>
+<li>Next and previous nodes are linked.</li>
+</ul>
+</li>
+</ul>
+<p>Advantages:</p>
+<ul>
+<li>They are naturally dynamic so suitable for high amount of data.</li>
+<li>Prepending to a list is fast.</li>
+<li>Inserting into a sorted list is very fast</li>
+</ul>
+<h1 id="section-20">Section 20</h1>
+<h2 id="interprocess-communication">Interprocess Communication</h2>
+<h3 id="process">Process</h3>
+<p>A process is a program in execution. Each process has it's own memmory and address space. And usually one thread of control.</p>
+<p>You can run a different process with a same program but they will have different address spaces. Each process have a parent process as a creator and the process itself is called a child. You can also have multiple processes in a same program.</p>
+<p>System Call: A system call is a request or service that made by the kernal.</p>
+<p>Each process is identiified with a positive integer called process id (PID). You can get the current PID with getpid() function in &lt;unistd.h&gt;.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getpid</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>; <span class="hljs-comment">// Gets the process id</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getppid</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>; <span class="hljs-comment">// Gets the parent process id </span>
+</div></code></pre>
+<h3 id="interprocess-communication">Interprocess communication</h3>
+<p>Interprocess communication (IPC) let processes work together.</p>
+<h4 id="different-ways-of-communication">Different ways of communication</h4>
+<p>There are some operating system techniques to make IPC possible.
+Pipes ( same process ):</p>
+<ul>
+<li>First communicates with second program.</li>
+<li>Half duplex.</li>
+<li>Used for communicating between child and parent.</li>
+<li>Same as a bucket and mug mechanism.</li>
+</ul>
+<p>Named Pipes ( different processes, FIFO):</p>
+<ul>
+<li>Both process can communicate to other.</li>
+<li>Full duplex.</li>
+</ul>
+<p>Message queues:</p>
+<ul>
+<li>Process will commmunicate by sender posting a message and reciever pulls it from the queue.</li>
+<li>Mix of signals and sockets.</li>
+</ul>
+<p>Shared Memory:</p>
+<ul>
+<li>Communication between two or more processes achieved by sharing a piece of memory.</li>
+</ul>
+<p>Sockets</p>
+<ul>
+<li>mostly used to communicate over a network between a client and a server.</li>
+</ul>
+<p>Signals:</p>
+<ul>
+<li>Communication by raising signals.</li>
+<li>Sent the signal as numbers.</li>
+</ul>
+<h3 id="signals">Signals</h3>
+<p>Signals can be genrated by the system or the user can raise it programmatically. A process can choose to ignore or recieve the signal.</p>
+<p>Cntrl + c -&gt; SIGINT
+Cntrl + z -&gt; SIGSTP
+fg -&gt; SIGCONT</p>
+<p>There are some default signals that the program will automatically take action</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Signal</th>
+<th style="text-align:center">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">TERM</td>
+<td style="text-align:center">Terminate</td>
+</tr>
+<tr>
+<td style="text-align:center">CORE</td>
+<td style="text-align:center">Terminate and dump core</td>
+</tr>
+<tr>
+<td style="text-align:center">IGN</td>
+<td style="text-align:center">Ignore the signal</td>
+</tr>
+<tr>
+<td style="text-align:center">STOP</td>
+<td style="text-align:center">Program will stop (Cntrl + z)</td>
+</tr>
+<tr>
+<td style="text-align:center">CONT</td>
+<td style="text-align:center">The process will continue from stopping</td>
+</tr>
+</tbody>
+</table>
+<pre class="hljs"><code><div><span class="hljs-built_in">kill</span> -l
+</div></code></pre>
+<p>Will display all the signals that can be given to a program.</p>
+<h3 id="raising-signals">Raising signals</h3>
+<p>A signal can be raised by functions in &lt;string.h&gt; library.
+<code>raise()</code> will send a signal to current process.<code>kill()</code> will sent signal to another process for killing it.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">raise</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sig)</span></span>;
+</div></code></pre>
+<p>if unsuccessfull raise will generate a nonzero value.</p>
+<p><code>alarm()</code> will generate a SIGALARM and if no one catch it it will terminate after a time.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">alarm</span><span class="hljs-params">(<span class="hljs-keyword">int</span> timeinseconds)</span></span>;
+</div></code></pre>
+<h3 id="handling-signals">Handling signals</h3>
+<p>You can let your program handle the signals that it recieves using <code>signal()</code> function. We can also ignore the signals.</p>
+<p>But some signals cannot be ignored,aborted or handled.</p>
+<ul>
+<li>SIGKILL</li>
+<li>SIGABRT</li>
+<li>SIGSTOP</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">void</span> (*sigreturn) (<span class="hljs-keyword">int</span>);
+    sigreturn = signal(SIGINT,signalrecieved);
+</div></code></pre>
+<p>There is also a sigaction() function:</p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sigaction</span> <span class="hljs-title">new_action</span>;</span>
+new_action.sa_flags = <span class="hljs-number">0</span>;
+new_action.sa_handler = handleer;
+sigemptyset(&amp;new_action.sa_mask);
+
+sigaction(SIGINT,<span class="hljs-literal">NULL</span>,&amp;new_action);
+</div></code></pre>
+<h3 id="fork"><code>fork()</code></h3>
+<p>Fork function is used for creating new process within a process. It can be used for stuff like multitasking.</p>
+<ul>
+<li>Fork creates a copy of the parent processes address space and it will not affect the parents memory. updating a memory in child won't affect in parent.</li>
+</ul>
+<h1 id="section-21">Section 21</h1>
+<h2 id="threads">Threads</h2>
+<h3 id="thread-vs-process">Thread vs Process</h3>
+<ul>
+<li>A thread is a lightweight process.</li>
+<li>It have a unique id,program counter,register set and a stack space just like process.</li>
+<li>Threads share memory between processes unlike processes.</li>
+<li>All threads have access to all the files and signals.</li>
+</ul>
+<h3 id="posix-threads">POSIX Threads</h3>
+<p>Threads are popular way to improve an application through parellelism.</p>
+<ul>
+<li>C11 Doesnt have a thread support and it is not portable. So we can use POSIX threads in UNIX systems ( pthreads ).</li>
+<li>Allows to spawn a new concurrent process flow.</li>
+<li>Can be found on any modern POSIX complaint OS.</li>
+<li>Gain speed through parellel distributing and processing.</li>
+</ul>
+<h3 id="creating-a-thread">Creating a thread</h3>
+<p><code>pthread_create()</code> can be used for this.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">pthread_create</span><span class="hljs-params">(<span class="hljs-keyword">pthread_t</span> * thread,<span class="hljs-keyword">const</span> <span class="hljs-keyword">pthread_attr_t</span> * attr,<span class="hljs-keyword">void</span> * (*start_routine)(<span class="hljs-keyword">void</span> *),<span class="hljs-keyword">void</span> * arg)</span></span>;
+</div></code></pre>
+<p>thread -&gt; used to identify the thread.
+attr -&gt; can specify attribute objects.
+start_routine -&gt; name of the function to be executed.
+arg -&gt; arguments to pass to that function.</p>
+<p>We can also use pthread_join() for creating and also used for knowing a thread is completed and exited. Used to link current thread to a new thread. It will stop the program for the selected thread to stop.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">pthread_join</span><span class="hljs-params">(<span class="hljs-keyword">pthread_t</span> thread,<span class="hljs-keyword">void</span> ** value_ptr)</span></span>;
+</div></code></pre>
+<p>thread -&gt; thread id of the thread to wait for.</p>
+<p>value_ptr -&gt; This will be passed to the pthread_exit() when it is not NULL</p>
+<p>We can also exit a thread using pthread_exit()</p>
+<ul>
+<li>By explicitly calling it</li>
+<li>By letting thread function return</li>
+<li>calling exit() function also close all threads.</li>
+</ul>
+<p>If main() finishes before threads the threads will continue.pthread_exit() is typically called when thread is finished and no longer required to exit.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">pthread_exit</span><span class="hljs-params">(<span class="hljs-keyword">void</span> * value_ptr)</span></span>;
+</div></code></pre>
+<p>value_ptr -&gt; this value will be passed to any successfull joining.
+Example:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> * <span class="hljs-title">threadFn</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is a thread...\n"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">pthread_t</span> thread = <span class="hljs-number">0</span>;
+    pthread_create(&amp;thread,<span class="hljs-literal">NULL</span>,threadFn,<span class="hljs-literal">NULL</span>); <span class="hljs-comment">// Creates a thread</span>
+    pthread_join(thread,<span class="hljs-literal">NULL</span>);  <span class="hljs-comment">// Waits for the thread to finish</span>
+    pthread_exit(<span class="hljs-literal">NULL</span>); <span class="hljs-comment">// Close all the threads</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="passing-arguments-into-threads">Passing arguments into threads</h3>
+<p>Examples:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> * <span class="hljs-title">thread1</span><span class="hljs-params">(<span class="hljs-keyword">void</span> * message)</span></span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is thread 1 and pass is %s\n"</span>,(<span class="hljs-keyword">char</span> *) message);
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> * <span class="hljs-title">thread2</span><span class="hljs-params">(<span class="hljs-keyword">void</span> * message)</span></span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is thread 2 and pass is %s\n"</span>,(<span class="hljs-keyword">char</span> *) message);
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+    <span class="hljs-keyword">char</span> * mess1 = <span class="hljs-string">"STRONGPASS"</span>;
+    <span class="hljs-keyword">char</span> * mess2 = <span class="hljs-string">"ANOTHERSTRONGPASS"</span>;
+
+    <span class="hljs-keyword">pthread_t</span> t1,t2;
+
+    <span class="hljs-keyword">int</span> t1ret = pthread_create(&amp;t1,<span class="hljs-literal">NULL</span>,thread1,(<span class="hljs-keyword">void</span> *) mess1);
+    <span class="hljs-keyword">int</span> t2ret = pthread_create(&amp;t2,<span class="hljs-literal">NULL</span>,thread2,(<span class="hljs-keyword">void</span> *) mess2);
+
+    pthread_join(t1,<span class="hljs-literal">NULL</span>);
+    pthread_join(t2,<span class="hljs-literal">NULL</span>);
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Process finished and T1 returned %d and T2 returned %d\n"</span>,t1ret,t2ret);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>Multiple Arguments:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_data</span>{</span>
+    <span class="hljs-keyword">int</span> dummyvalue;
+    <span class="hljs-keyword">char</span> * message;
+};
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> * <span class="hljs-title">thread1</span><span class="hljs-params">(<span class="hljs-keyword">void</span> * message)</span></span>{
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_data</span> * <span class="hljs-title">m</span> = (<span class="hljs-title">struct</span> <span class="hljs-title">thread_data</span> *) <span class="hljs-title">message</span>;</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is thread 1. Dummy is %d and pass is %s\n"</span>,m-&gt;dummyvalue,m-&gt;message);
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> * <span class="hljs-title">thread2</span><span class="hljs-params">(<span class="hljs-keyword">void</span> * message)</span></span>{
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_data</span> * <span class="hljs-title">m</span> = (<span class="hljs-title">struct</span> <span class="hljs-title">thread_data</span> *) <span class="hljs-title">message</span>;</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is thread 2. Dummy is %d and pass is %s\n"</span>,m-&gt;dummyvalue,m-&gt;message);
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+     
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_data</span> <span class="hljs-title">d1</span> = {</span><span class="hljs-number">10</span>,<span class="hljs-string">"Hi thread 1..."</span>};
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_data</span> <span class="hljs-title">d2</span> = {</span><span class="hljs-number">30</span>,<span class="hljs-string">"Hi thread 2..."</span>};
+    <span class="hljs-keyword">pthread_t</span> t1,t2;
+
+    <span class="hljs-keyword">int</span> t1ret = pthread_create(&amp;t1,<span class="hljs-literal">NULL</span>,thread1,(<span class="hljs-keyword">void</span> *) &amp;d1);
+    <span class="hljs-keyword">int</span> t2ret = pthread_create(&amp;t2,<span class="hljs-literal">NULL</span>,thread2,(<span class="hljs-keyword">void</span> *) &amp;d2);
+
+    pthread_join(t1,<span class="hljs-literal">NULL</span>);
+    pthread_join(t2,<span class="hljs-literal">NULL</span>);
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Process finished and T1 returned %d and T2 returned %d\n"</span>,t1ret,t2ret);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p>Returning from thread:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_data</span>{</span>
+    <span class="hljs-keyword">int</span> dummyvalue;
+    <span class="hljs-keyword">char</span> * message;
+};
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> * <span class="hljs-title">thread1</span><span class="hljs-params">(<span class="hljs-keyword">void</span> * message)</span></span>{
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_data</span> * <span class="hljs-title">m</span> = (<span class="hljs-title">struct</span> <span class="hljs-title">thread_data</span> *) <span class="hljs-title">message</span>;</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is thread 1. Dummy is %d and pass is %s\n"</span>,m-&gt;dummyvalue,m-&gt;message);
+    <span class="hljs-keyword">char</span> * result1 = <span class="hljs-string">"This is a result from thread 1"</span>;
+    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">void</span> * ) result1;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> * <span class="hljs-title">thread2</span><span class="hljs-params">(<span class="hljs-keyword">void</span> * message)</span></span>{
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_data</span> * <span class="hljs-title">m</span> = (<span class="hljs-title">struct</span> <span class="hljs-title">thread_data</span> *) <span class="hljs-title">message</span>;</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is thread 2. Dummy is %d and pass is %s\n"</span>,m-&gt;dummyvalue,m-&gt;message);
+    <span class="hljs-keyword">char</span> * result2 = <span class="hljs-string">"This is a result from thread 2"</span>;
+    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">void</span> * ) result2;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+     
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_data</span> <span class="hljs-title">d1</span> = {</span><span class="hljs-number">10</span>,<span class="hljs-string">"Hi thread 1..."</span>};
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_data</span> <span class="hljs-title">d2</span> = {</span><span class="hljs-number">30</span>,<span class="hljs-string">"Hi thread 2..."</span>};
+    <span class="hljs-keyword">pthread_t</span> t1,t2;
+
+    <span class="hljs-keyword">int</span> t1ret = pthread_create(&amp;t1,<span class="hljs-literal">NULL</span>,thread1,(<span class="hljs-keyword">void</span> *) &amp;d1);
+    <span class="hljs-keyword">int</span> t2ret = pthread_create(&amp;t2,<span class="hljs-literal">NULL</span>,thread2,(<span class="hljs-keyword">void</span> *) &amp;d2);
+
+    <span class="hljs-keyword">char</span> * result1;
+    <span class="hljs-keyword">char</span> * result2;
+
+    pthread_join(t1,(<span class="hljs-keyword">void</span> **) &amp;result1);
+    pthread_join(t2,(<span class="hljs-keyword">void</span> **) &amp;result2);
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Process finished and T1 returned %d with result \"%s\".\n"</span>,t1ret,result1);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Process finished and T2 returned %d with result \"%s\".\n"</span>,t2ret,result2);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="common-thread-functions">Common thread functions</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Function</th>
+<th style="text-align:center">Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>pthreads_self()</code></td>
+<td style="text-align:center">Returns the current thread id</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>pthread_detatch()</code></td>
+<td style="text-align:center">Makes the thread detatched from the parent. So it cannot be joined</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>pthread_equal()</code></td>
+<td style="text-align:center">Comparing two pids. == wont work</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>pthread_once()</code></td>
+<td style="text-align:center">execute init_routine exactly once. Calling again will have no effect.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>pthread_cancel()</code></td>
+<td style="text-align:center">Cancels a thread id</td>
+</tr>
+</tbody>
+</table>
+<h3 id="thread-synchronisation">Thread Synchronisation</h3>
+<h4 id="race-condition">Race condition</h4>
+<ul>
+<li>The threads are executes at random by the OS.</li>
+<li>It also executes at different speeds.</li>
+<li>They will race to finish and it will give unexpected results.</li>
+<li>Some data will read and write at the same time.</li>
+</ul>
+<h4 id="deadlocks">Deadlocks</h4>
+<ul>
+<li>Two threads are sharing the same resources and effectively preventing each other from accessing this resource.</li>
+</ul>
+<h4 id="thread-safe-code">Thread safe code</h4>
+<ul>
+<li>There are no static or global varibles that a thread may share.</li>
+<li>Program should protect shared data.</li>
+</ul>
+<h3 id="mutual-exclusion-atomic-operations-and-condition-variables">Mutual Exclusion, Atomic operations and condition variables.</h3>
+<p>When a code contains a shared resource (critical code) which is accessed by multiple threads. It is important minimize these codes. Mutual exclusion is a process of serializing access to shared resources.
+Mutex is a lock that can be put on shared resources. Only one thread can have the key at a time. Atomic operations allow  to modify some variables in a multithread context. Condition varaibles acts as flags or notificaition systems between threads. We can also use broadcast mechanism to signal all threads.</p>
+<h3 id="mutexes">Mutexes</h3>
+<p>pthread.h provides three synchroniaztion methods</p>
+<ul>
+<li>mutexes : Lock or block access to variables by other threads</li>
+<li>joins : Make a thread wait untill one finishes</li>
+<li>condition variables - Communicating between threads.</li>
+</ul>
+<h1 id="on-hold">------------On hold------------------</h1>
 
 </body>
 </html>
