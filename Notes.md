@@ -2893,3 +2893,214 @@ sigaction(SIGINT,NULL,&new_action);
 Fork function is used for creating new process within a process. It can be used for stuff like multitasking.
 - Fork creates a copy of the parent processes address space and it will not affect the parents memory. updating a memory in child won't affect in parent.
 
+# Section 21
+## Threads
+### Thread vs Process
+- A thread is a lightweight process.
+- It have a unique id,program counter,register set and a stack space just like process.
+- Threads share memory between processes unlike processes.
+- All threads have access to all the files and signals.
+### POSIX Threads
+Threads are popular way to improve an application through parellelism.
+- C11 Doesnt have a thread support and it is not portable. So we can use POSIX threads in UNIX systems ( pthreads ).
+- Allows to spawn a new concurrent process flow.
+- Can be found on any modern POSIX complaint OS.
+- Gain speed through parellel distributing and processing.
+
+### Creating a thread
+```pthread_create()``` can be used for this.
+```c
+int pthread_create(pthread_t * thread,const pthread_attr_t * attr,void * (*start_routine)(void *),void * arg);
+```
+thread -> used to identify the thread.
+attr -> can specify attribute objects.
+start_routine -> name of the function to be executed.
+arg -> arguments to pass to that function.
+
+We can also use pthread_join() for creating and also used for knowing a thread is completed and exited. Used to link current thread to a new thread. It will stop the program for the selected thread to stop.
+```c
+int pthread_join(pthread_t thread,void ** value_ptr);
+```
+thread -> thread id of the thread to wait for.
+
+value_ptr -> This will be passed to the pthread_exit() when it is not NULL
+
+
+We can also exit a thread using pthread_exit()
+- By explicitly calling it
+- By letting thread function return
+- calling exit() function also close all threads.
+
+If main() finishes before threads the threads will continue.pthread_exit() is typically called when thread is finished and no longer required to exit.
+```c
+void pthread_exit(void * value_ptr);
+```
+value_ptr -> this value will be passed to any successfull joining.
+Example:
+```c
+#include <stdio.h>
+#include <pthread.h>
+
+void * threadFn(){
+    printf("This is a thread...\n");
+    return NULL;
+}
+
+int main(int argc, char const *argv[])
+{
+    pthread_t thread = 0;
+    pthread_create(&thread,NULL,threadFn,NULL); // Creates a thread
+    pthread_join(thread,NULL);  // Waits for the thread to finish
+    pthread_exit(NULL); // Close all the threads
+    return 0;
+}
+```
+### Passing arguments into threads
+Examples:
+```c
+#include <stdio.h>
+#include <pthread.h>
+
+void * thread1(void * message){
+    printf("This is thread 1 and pass is %s\n",(char *) message);
+    return NULL;
+}
+
+void * thread2(void * message){
+    printf("This is thread 2 and pass is %s\n",(char *) message);
+    return NULL;
+}
+
+int main(int argc, char const *argv[])
+{
+    char * mess1 = "STRONGPASS";
+    char * mess2 = "ANOTHERSTRONGPASS";
+
+    pthread_t t1,t2;
+
+    int t1ret = pthread_create(&t1,NULL,thread1,(void *) mess1);
+    int t2ret = pthread_create(&t2,NULL,thread2,(void *) mess2);
+
+    pthread_join(t1,NULL);
+    pthread_join(t2,NULL);
+
+    printf("Process finished and T1 returned %d and T2 returned %d\n",t1ret,t2ret);
+    return 0;
+}
+```
+Multiple Arguments:
+```c
+#include <stdio.h>
+#include <pthread.h>
+
+struct thread_data{
+    int dummyvalue;
+    char * message;
+};
+
+void * thread1(void * message){
+    struct thread_data * m = (struct thread_data *) message;
+    printf("This is thread 1. Dummy is %d and pass is %s\n",m->dummyvalue,m->message);
+    return NULL;
+}
+
+void * thread2(void * message){
+    struct thread_data * m = (struct thread_data *) message;
+    printf("This is thread 2. Dummy is %d and pass is %s\n",m->dummyvalue,m->message);
+    return NULL;
+}
+
+int main(int argc, char const *argv[])
+{
+     
+    struct thread_data d1 = {10,"Hi thread 1..."};
+    struct thread_data d2 = {30,"Hi thread 2..."};
+    pthread_t t1,t2;
+
+    int t1ret = pthread_create(&t1,NULL,thread1,(void *) &d1);
+    int t2ret = pthread_create(&t2,NULL,thread2,(void *) &d2);
+
+    pthread_join(t1,NULL);
+    pthread_join(t2,NULL);
+
+    printf("Process finished and T1 returned %d and T2 returned %d\n",t1ret,t2ret);
+    return 0;
+}
+```
+Returning from thread:
+```c
+#include <stdio.h>
+#include <pthread.h>
+
+struct thread_data{
+    int dummyvalue;
+    char * message;
+};
+
+void * thread1(void * message){
+    struct thread_data * m = (struct thread_data *) message;
+    printf("This is thread 1. Dummy is %d and pass is %s\n",m->dummyvalue,m->message);
+    char * result1 = "This is a result from thread 1";
+    return (void * ) result1;
+}
+
+void * thread2(void * message){
+    struct thread_data * m = (struct thread_data *) message;
+    printf("This is thread 2. Dummy is %d and pass is %s\n",m->dummyvalue,m->message);
+    char * result2 = "This is a result from thread 2";
+    return (void * ) result2;
+}
+
+int main(int argc, char const *argv[])
+{
+     
+    struct thread_data d1 = {10,"Hi thread 1..."};
+    struct thread_data d2 = {30,"Hi thread 2..."};
+    pthread_t t1,t2;
+
+    int t1ret = pthread_create(&t1,NULL,thread1,(void *) &d1);
+    int t2ret = pthread_create(&t2,NULL,thread2,(void *) &d2);
+
+    char * result1;
+    char * result2;
+
+    pthread_join(t1,(void **) &result1);
+    pthread_join(t2,(void **) &result2);
+
+    printf("Process finished and T1 returned %d with result \"%s\".\n",t1ret,result1);
+    printf("Process finished and T2 returned %d with result \"%s\".\n",t2ret,result2);
+    return 0;
+}
+```
+### Common thread functions
+| Function | Use |
+|:---:|:--:|
+| ```pthreads_self()```| Returns the current thread id |
+| ```pthread_detatch()``` | Makes the thread detatched from the parent. So it cannot be joined |
+|```pthread_equal()``` | Comparing two pids. == wont work|
+| ```pthread_once()``` | execute init_routine exactly once. Calling again will have no effect. |
+| ```pthread_cancel()``` | Cancels a thread id |
+
+### Thread Synchronisation
+#### Race condition
+- The threads are executes at random by the OS.
+- It also executes at different speeds.
+- They will race to finish and it will give unexpected results.
+- Some data will read and write at the same time.
+#### Deadlocks
+- Two threads are sharing the same resources and effectively preventing each other from accessing this resource.
+#### Thread safe code
+- There are no static or global varibles that a thread may share.
+- Program should protect shared data.
+
+### Mutual Exclusion, Atomic operations and condition variables.
+When a code contains a shared resource (critical code) which is accessed by multiple threads. It is important minimize these codes. Mutual exclusion is a process of serializing access to shared resources.
+Mutex is a lock that can be put on shared resources. Only one thread can have the key at a time. Atomic operations allow  to modify some variables in a multithread context. Condition varaibles acts as flags or notificaition systems between threads. We can also use broadcast mechanism to signal all threads.
+
+### Mutexes
+pthread.h provides three synchroniaztion methods
+- mutexes : Lock or block access to variables by other threads
+- joins : Make a thread wait untill one finishes
+- condition variables - Communicating between threads.
+
+# ------------On hold------------------
