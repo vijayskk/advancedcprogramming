@@ -3527,6 +3527,208 @@ Mutex is a lock that can be put on shared resources. Only one thread can have th
 <li>condition variables - Communicating between threads.</li>
 </ul>
 <h1 id="on-hold">------------On hold------------------</h1>
+<h1 id="section-22">Section 22</h1>
+<h2 id="networking">Networking</h2>
+<h3 id="tcp-protocol">TCP Protocol</h3>
+<p>Transmission control protocol is a standard to establish and maintain network connections.TCP is a connection oriented program.It establishes the connection and maintain it untill all packet have been sent.</p>
+<p>Features:</p>
+<ul>
+<li>Connection oriented</li>
+<li>Reliable</li>
+<li>Handles loss packet</li>
+<li>Packet sequencing</li>
+<li>Handles duplicated packets</li>
+<li>Full duplex</li>
+<li>Flow control</li>
+<li>Congestion control</li>
+</ul>
+<h3 id="client---server-model">Client - Server Model</h3>
+<ul>
+<li>Client → Request → Server → Processing → Response</li>
+<li>typically uses TCP/IP protocol</li>
+<li>A central server can connect to multiple clients</li>
+<li>A special server called daemon is created for awaiting multiple clients.</li>
+</ul>
+<h3 id="types-of-servers">Types of servers</h3>
+<ul>
+<li>Iterative server
+<ul>
+<li>simple</li>
+<li>handles client one by one</li>
+<li>the client will wait for their turn</li>
+</ul>
+</li>
+<li>Concurrent Servers
+<ul>
+<li>Runs multiple concurrent processes to serve many requests at a time.</li>
+<li>one process may take long but no waiting</li>
+<li>Done by forking</li>
+</ul>
+</li>
+</ul>
+<h3 id="sockets">Sockets</h3>
+<p>Sockets are virtual endpoints that two computers can connect. One socket listens to a particular port in an address. Other socket reaches out to form a connection.</p>
+<h4 id="steps">Steps:</h4>
+<ul>
+<li>Create a new connection</li>
+<li>Attatch a local address to a socket (bind)</li>
+<li>Announce the acceptance (listen)</li>
+<li>Block caller until a request arrives.</li>
+<li>Actively attempt to establish a connection (connect)</li>
+<li>Send data</li>
+<li>Recieve some data</li>
+<li>Release the connection (close)</li>
+</ul>
+<h3 id="the-sockets-api">The sockets API</h3>
+<ul>
+<li>&lt;sys/socket.h&gt; include the main socket API.</li>
+<li>&lt;sys/types.h&gt; for some type defenitions.</li>
+<li>&lt;netinet/in.h&gt; for constants and structs need for internet domain addresses.</li>
+<li>&lt;netdb.h&gt; defines the structure hostent</li>
+<li>&lt;arpa/inet.h&gt; defines the in_addr structure.</li>
+</ul>
+<h3 id="ports">Ports</h3>
+<ul>
+<li>Computer may need to run multiple servers or clients.</li>
+<li>So they uses a different port.</li>
+<li>A port will be an integer between 1024 and 65535</li>
+<li>Port below 1024 are well known system ports.</li>
+</ul>
+<h3 id="structs-use-for-network-programming">Structs use for network programming</h3>
+<h4 id="sockaddr">sockaddr</h4>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sockaddr</span>{</span>
+    <span class="hljs-keyword">unsigned</span> short sa_family;
+    <span class="hljs-keyword">char</span> sa_data[<span class="hljs-number">14</span>];
+}
+</div></code></pre>
+<ul>
+<li>sa_family : Represents an address family. sa_family can be:
+<ul>
+<li>AF_INET (Mostly used)</li>
+<li>AF_UNIX</li>
+<li>AF_NS</li>
+<li>AF_IMPLINK</li>
+</ul>
+</li>
+<li>sa_data: Is a protocol specific address.</li>
+</ul>
+<h4 id="sockaddrin">sockaddr_in</h4>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sockaddr_in</span>{</span>
+    short <span class="hljs-keyword">int</span> sin_family;
+    <span class="hljs-keyword">unsigned</span> short <span class="hljs-keyword">int</span> sin_port;
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">in_addr</span> <span class="hljs-title">sin_addr</span>;</span>
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> sin_zero[<span class="hljs-number">8</span>]
+}
+</div></code></pre>
+<p>This structure uses in_addr as a strcture field and holds the 32bit netid/hostid</p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">in_addr</span>{</span>
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> s_addr;
+}
+</div></code></pre>
+<h4 id="hostent">hostent</h4>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">hostent</span>{</span>
+    <span class="hljs-keyword">char</span> * h_name;
+    <span class="hljs-keyword">char</span> ** h_aliases;
+    <span class="hljs-keyword">int</span> h_addrtype;
+    <span class="hljs-keyword">int</span> h_length;
+    <span class="hljs-keyword">char</span> ** h_addr_list;
+
+    <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> h_addr h_addr_list[0]</span>
+}
+</div></code></pre>
+<p>This structure is used to hold information related to host.</p>
+<h3 id="functions-for-socket-connection">Functions for socket connection</h3>
+<h4 id="socket">socket()</h4>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">socket</span><span class="hljs-params">(<span class="hljs-keyword">int</span> family,<span class="hljs-keyword">int</span> type,<span class="hljs-keyword">int</span> protocol)</span></span>;
+</div></code></pre>
+<p>returns a socket discriptor that can be used later and -1 for error.</p>
+<h4 id="connect">connect()</h4>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">connect</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sockfd,struct sockaddr * serv_addr,<span class="hljs-keyword">int</span> addrlen)</span></span>;
+</div></code></pre>
+<p>sockfd - Socket discriptor from socket()
+serv_addr - contains destination ip address and ports.
+addrlen - sizeof(struct sockaddr)</p>
+<p>Returns zero for success and -1 for error.</p>
+<h4 id="bind">bind()</h4>
+<p>bind binds a port and an ip to a socket.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">bind</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sockfd,struct sockaddr * serv_addr,<span class="hljs-keyword">int</span> addrlen)</span></span>;
+</div></code></pre>
+<p>sockfd - Socket discriptor from socket()
+serv_addr - contains destination ip address and ports.
+addrlen - sizeof(struct sockaddr)</p>
+<p>Returns zero for success and -1 for error.</p>
+<h4 id="listen">listen()</h4>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">listen</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sockfd,<span class="hljs-keyword">int</span> backlog)</span></span>;
+</div></code></pre>
+<p>Tells the operating system to listen upto N clients and make them wait. N+1 th client will recieve a server busy. It wont answer but it will let them wait.</p>
+<p>Returns zero for success and -1 for error.</p>
+<h4 id="accept">accept()</h4>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">accept</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sockfd,struct sockaddr * cliaddr,<span class="hljs-keyword">socklen_t</span> * addrlen)</span></span>;
+</div></code></pre>
+<p>cliaddr -&gt; points to the client's IP address and port
+addrlen - sizeof(struct sockaddr)</p>
+<p>Returns non-negative discripter on success and -1 on error.</p>
+<h4 id="recv">recv()</h4>
+<p>Recieve data from a connected socket</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">recv</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sockfd,<span class="hljs-keyword">void</span> * buf,<span class="hljs-keyword">int</span> len,<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> flags)</span></span>;
+</div></code></pre>
+<p>buf - buffer to store data
+len - max length of buffer
+flags - Set to zero</p>
+<p>Returns number of bytes read and return -1 on error</p>
+<h4 id="recvfrom">recvfrom()</h4>
+<p>Recieve data from an unconnected socket.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">recvfrom</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sockfd,<span class="hljs-keyword">void</span> * buf,<span class="hljs-keyword">int</span> len,<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> flags,struct sockaddr * from,<span class="hljs-keyword">int</span> * fromlen)</span></span>;
+</div></code></pre>
+<p>buf - buffer to store data
+len - max length of buffer
+flags - Set to zero
+from - contains destination ip address and ports.
+fromlen - sizeof(struct sockaddr)</p>
+<p>Returns number of bytes read and return -1 on error</p>
+<h4 id="write">write()</h4>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">write</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sockfd,<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> * buf,<span class="hljs-keyword">int</span> nbytes,<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> flags)</span></span>;
+</div></code></pre>
+<p>buf - buffer to send
+nbytes - max length of buffer</p>
+<p>Returns -1 for error</p>
+<h4 id="send">send()</h4>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">send</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sockfd,<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> * msg,<span class="hljs-keyword">int</span> len,<span class="hljs-keyword">int</span> flags)</span></span>;
+</div></code></pre>
+<p>msg - pointer to msg to send
+len - length of msg
+flags - Set to zero</p>
+<p>Returns number of bytes send and return -1 on error</p>
+<h4 id="sendto">sendto()</h4>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sendto</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sockfd,<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> * msg,<span class="hljs-keyword">int</span> len,<span class="hljs-keyword">int</span> flags,struct sockaddr * to,<span class="hljs-keyword">int</span> * tolen)</span></span>;
+</div></code></pre>
+<p>msg - pointer to msg to send
+len - length of msg
+flags - Set to zero
+to - contains source ip address and ports.
+tolen - sizeof(struct sockaddr)</p>
+<p>Returns number of bytes send and return -1 on error</p>
+<h4 id="read">read()</h4>
+<p>Reads a file associated to a buffer</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">read</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sockfd,<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> * buf,<span class="hljs-keyword">int</span> nbytes)</span></span>;
+</div></code></pre>
+<p>buf - buffer to send
+nbytes - max length of buffer</p>
+<p>Returns -1 for error</p>
+<h4 id="close">close()</h4>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">close</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sockfd)</span></span>;
+</div></code></pre>
+<p>closes a connection defined by sockfd.</p>
+<h4 id="shutdown">shutdown()</h4>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">shutdown</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sockfd,<span class="hljs-keyword">int</span> how)</span></span>;
+</div></code></pre>
+<p>closes a connection defined by sockfd more gracefully
+how:</p>
+<ul>
+<li>0 -&gt; recieving not allowed</li>
+<li>1 -&gt; sending not allowed</li>
+<li>2 -&gt; same thing as close() ( both are not allowed )</li>
+</ul>
 
 </body>
 </html>

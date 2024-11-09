@@ -3104,3 +3104,229 @@ pthread.h provides three synchroniaztion methods
 - condition variables - Communicating between threads.
 
 # ------------On hold------------------
+# Section 22
+## Networking
+### TCP Protocol
+Transmission control protocol is a standard to establish and maintain network connections.TCP is a connection oriented program.It establishes the connection and maintain it untill all packet have been sent.
+
+Features: 
+- Connection oriented
+- Reliable
+- Handles loss packet
+- Packet sequencing
+- Handles duplicated packets
+- Full duplex
+- Flow control 
+- Congestion control
+
+### Client - Server Model
+- Client &rarr; Request &rarr; Server &rarr; Processing &rarr; Response 
+- typically uses TCP/IP protocol
+- A central server can connect to multiple clients
+- A special server called daemon is created for awaiting multiple clients.
+
+### Types of servers
+- Iterative server
+    - simple
+    - handles client one by one
+    - the client will wait for their turn
+- Concurrent Servers
+    - Runs multiple concurrent processes to serve many requests at a time.
+    - one process may take long but no waiting
+    - Done by forking
+### Sockets
+Sockets are virtual endpoints that two computers can connect. One socket listens to a particular port in an address. Other socket reaches out to form a connection.
+#### Steps:
+- Create a new connection
+- Attatch a local address to a socket (bind)
+- Announce the acceptance (listen)
+- Block caller until a request arrives.
+- Actively attempt to establish a connection (connect) 
+- Send data
+- Recieve some data
+- Release the connection (close)
+
+### The sockets API
+- <sys/socket.h> include the main socket API.
+- <sys/types.h> for some type defenitions.
+- <netinet/in.h> for constants and structs need for internet domain addresses.
+- <netdb.h> defines the structure hostent
+- <arpa/inet.h> defines the in_addr structure.
+
+### Ports
+- Computer may need to run multiple servers or clients.
+- So they uses a different port.
+- A port will be an integer between 1024 and 65535
+- Port below 1024 are well known system ports.
+
+### Structs use for network programming
+
+#### sockaddr
+```c
+struct sockaddr{
+    unsigned short sa_family;
+    char sa_data[14];
+}
+```
+- sa_family : Represents an address family. sa_family can be:
+    - AF_INET (Mostly used)
+    - AF_UNIX
+    - AF_NS
+    - AF_IMPLINK
+- sa_data: Is a protocol specific address.
+
+#### sockaddr_in
+```c
+struct sockaddr_in{
+    short int sin_family;
+    unsigned short int sin_port;
+    struct in_addr sin_addr;
+    unsigned char sin_zero[8]
+}
+```
+This structure uses in_addr as a strcture field and holds the 32bit netid/hostid
+```c
+struct in_addr{
+    unsigned long s_addr;
+}
+```
+#### hostent
+```c
+struct hostent{
+    char * h_name;
+    char ** h_aliases;
+    int h_addrtype;
+    int h_length;
+    char ** h_addr_list;
+
+    #define h_addr h_addr_list[0]
+}
+```
+This structure is used to hold information related to host.
+
+### Functions for socket connection
+#### socket()
+```c
+int socket(int family,int type,int protocol);
+```
+returns a socket discriptor that can be used later and -1 for error.
+
+#### connect()
+```c
+int connect(int sockfd,struct sockaddr * serv_addr,int addrlen);
+```
+sockfd - Socket discriptor from socket()
+serv_addr - contains destination ip address and ports. 
+addrlen - sizeof(struct sockaddr)
+
+Returns zero for success and -1 for error.
+
+#### bind()
+bind binds a port and an ip to a socket.
+```c
+int bind(int sockfd,struct sockaddr * serv_addr,int addrlen);
+```
+sockfd - Socket discriptor from socket()
+serv_addr - contains destination ip address and ports. 
+addrlen - sizeof(struct sockaddr)
+
+Returns zero for success and -1 for error.
+
+#### listen()
+```c
+int listen(int sockfd,int backlog);
+```
+Tells the operating system to listen upto N clients and make them wait. N+1 th client will recieve a server busy. It wont answer but it will let them wait.
+
+Returns zero for success and -1 for error.
+
+#### accept()
+```c
+int accept(int sockfd,struct sockaddr * cliaddr,socklen_t * addrlen);
+```
+cliaddr -> points to the client's IP address and port
+addrlen - sizeof(struct sockaddr)
+
+Returns non-negative discripter on success and -1 on error.
+
+#### recv()
+Recieve data from a connected socket
+```c
+int recv(int sockfd,void * buf,int len,unsigned int flags);
+```
+buf - buffer to store data
+len - max length of buffer
+flags - Set to zero
+
+Returns number of bytes read and return -1 on error
+
+#### recvfrom() 
+Recieve data from an unconnected socket.
+```c
+int recvfrom(int sockfd,void * buf,int len,unsigned int flags,struct sockaddr * from,int * fromlen);
+```
+buf - buffer to store data
+len - max length of buffer
+flags - Set to zero
+from - contains destination ip address and ports. 
+fromlen - sizeof(struct sockaddr)
+
+Returns number of bytes read and return -1 on error
+
+#### write()
+```c
+int write(int sockfd,const void * buf,int nbytes,unsigned int flags);
+```
+buf - buffer to send
+nbytes - max length of buffer
+
+Returns -1 for error
+
+#### send()
+```c
+int send(int sockfd,const void * msg,int len,int flags);
+```
+msg - pointer to msg to send
+len - length of msg
+flags - Set to zero
+
+Returns number of bytes send and return -1 on error
+
+#### sendto()
+```c
+int sendto(int sockfd,const void * msg,int len,int flags,struct sockaddr * to,int * tolen);
+```
+msg - pointer to msg to send
+len - length of msg
+flags - Set to zero
+to - contains source ip address and ports. 
+tolen - sizeof(struct sockaddr)
+
+
+Returns number of bytes send and return -1 on error
+
+#### read()
+Reads a file associated to a buffer
+```c
+int read(int sockfd,const void * buf,int nbytes);
+```
+buf - buffer to send
+nbytes - max length of buffer
+
+Returns -1 for error
+
+#### close()
+```c
+int close(int sockfd);
+```
+closes a connection defined by sockfd.
+
+#### shutdown()
+```c
+int shutdown(int sockfd,int how);
+```
+closes a connection defined by sockfd more gracefully
+how:
+- 0 -> recieving not allowed
+- 1 -> sending not allowed
+- 2 -> same thing as close() ( both are not allowed )
