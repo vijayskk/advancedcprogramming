@@ -3103,7 +3103,6 @@ pthread.h provides three synchroniaztion methods
 - joins : Make a thread wait untill one finishes
 - condition variables - Communicating between threads.
 
-# ------------On hold------------------
 # Section 22
 ## Networking
 ### TCP Protocol
